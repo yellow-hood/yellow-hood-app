@@ -83,10 +83,10 @@ export const useAuthStore = create<AuthStore>()(
         try {
           await authService.logout();
         } catch (error) {
-          // Continue with logout even if API call fails
-          console.error("Logout API error:", error);
+          // Clear local state regardless; let caller show feedback
+          throw error;
         } finally {
-          // Clear token from localStorage
+          // Clear token from localStorage and state even if API failed
           if (typeof window !== "undefined") {
             localStorage.removeItem("auth_token");
           }

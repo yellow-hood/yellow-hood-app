@@ -47,7 +47,9 @@ export default function SwapModal({
       setAmount("");
       onClose();
     } catch (error: any) {
-      toast.error(error.response?.data?.error || "Swap failed");
+      toast.error(
+        error?.response?.data?.error || "Swap failed. Please try again."
+      );
     }
   };
 
@@ -87,7 +89,7 @@ export default function SwapModal({
             <Input
               type="number"
               label="Amount"
-              placeholder="Enter amount to swap"
+              placeholder="Amount in Y-COIN"
               value={amount}
               onValueChange={setAmount}
               startContent={<Coins className="w-4 h-4 text-default-400" />}
@@ -103,7 +105,7 @@ export default function SwapModal({
 
             <div className="p-3 rounded-lg bg-default-100 border border-default-200">
               <p className="text-xs text-default-500">
-                This will exchange your Y-COIN through Vit-Rin. The transaction may take a few moments to complete.
+                Processed via Vit-Rin. May take a few moments.
               </p>
             </div>
           </div>

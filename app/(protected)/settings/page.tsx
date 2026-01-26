@@ -50,7 +50,9 @@ export default function SettingsPage() {
 
       toast.success("Settings updated successfully!");
     } catch (error: any) {
-      toast.error(error.response?.data?.error || "Failed to update settings");
+      toast.error(
+        error?.response?.data?.error || "Couldn't update settings. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -110,6 +112,7 @@ export default function SettingsPage() {
               <Button
                 type="submit"
                 color="primary"
+                size="lg"
                 isLoading={isLoading}
                 className="font-semibold"
               >

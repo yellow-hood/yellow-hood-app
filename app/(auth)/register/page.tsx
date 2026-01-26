@@ -36,7 +36,7 @@ export default function RegisterPage() {
       
       router.push("/");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Registration failed");
+      toast.error(err?.response?.data?.error || "Registration failed. Please try again.");
     }
   };
 
@@ -51,7 +51,7 @@ export default function RegisterPage() {
             Create Account
           </h1>
           <p className="text-sm text-default-500 text-center">
-            Join Yellow Hood and start earning rewards
+            Enter your details to create an account.
           </p>
         </CardHeader>
         <CardBody className="gap-4">

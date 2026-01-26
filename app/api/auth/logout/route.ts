@@ -30,7 +30,8 @@ export async function POST(request: Request) {
       { status: 200 }
     );
     
-    response.cookies.delete("auth_token");
+    // Clear auth cookie using same path as login so browser removes it reliably
+    response.cookies.set("auth_token", "", { path: "/", maxAge: 0 });
 
     return response;
   } catch (error) {

@@ -29,12 +29,14 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle 401 unauthorized - clear token and redirect
+    // Handle 401 unauthorized - clear token, show feedback, redirect
     if (error.response?.status === 401) {
       if (typeof window !== "undefined") {
         localStorage.removeItem("auth_token");
-        // Optionally redirect to login
-        // window.location.href = "/login";
+        import("sonner").then(({ toast }) => {
+          toast.error("Your session has expired. Please sign in again.");
+        });
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);

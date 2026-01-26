@@ -16,16 +16,23 @@ import {
 import { Coins, ArrowRightLeft, History } from "lucide-react";
 import { useWalletStore } from "@/store/useWalletStore";
 import SwapModal from "./SwapModal";
+import { toast } from "sonner";
 import type { Transaction } from "@/types";
 
 export default function WalletDashboard() {
-  const { balance, transactions, fetchBalance, fetchTransactions, isLoading } =
+  const { balance, transactions, fetchBalance, fetchTransactions } =
     useWalletStore();
   const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
-    fetchBalance();
-    fetchTransactions();
+    Promise.all([fetchBalance(), fetchTransactions()])
+      .catch((err) => {
+        toast.error(
+          err?.response?.data?.error || "Couldn't load wallet. Please try again."
+        );
+      })
+      .finally(() => setInitialLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -74,7 +81,7 @@ export default function WalletDashboard() {
     <div className="space-y-6">
       {/* Balance Card */}
       <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/30 shadow-xl shadow-primary/20">
-        <CardBody className="p-8">
+        <CardBody className="p-6">
           <div className="flex items-center justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-default-500 text-sm">
@@ -82,7 +89,7 @@ export default function WalletDashboard() {
                 <span>Total Balance</span>
               </div>
               <h2 className="text-5xl font-bold text-foreground">
-                {isLoading ? "..." : balance.toFixed(2)}
+                {initialLoading ? "Loading…" : balance.toFixed(2)}
               </h2>
               <p className="text-sm text-default-500">Y-COIN</p>
             </div>
@@ -111,16 +118,16 @@ export default function WalletDashboard() {
         <CardBody className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <History className="w-5 h-5 text-primary" />
-            <h3 className="text-xl font-bold">Transaction History</h3>
+            <h3 className="text-xl font-bold text-foreground">Transaction History</h3>
           </div>
 
-          {isLoading && transactions.length === 0 ? (
+          {initialLoading ? (
             <div className="text-center py-8 text-default-500">
-              Loading transactions...
+              Loading…
             </div>
           ) : transactions.length === 0 ? (
             <div className="text-center py-8 text-default-500">
-              No transactions yet
+              No transactions yet.
             </div>
           ) : (
             <Table aria-label="Transaction history" removeWrapper>

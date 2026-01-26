@@ -21,6 +21,7 @@ import { Moon, Sun, Home, Wallet, Gamepad2, Settings, LogOut } from "lucide-reac
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
@@ -38,11 +39,13 @@ export default function Navbar() {
     try {
       await logout();
       router.push("/");
-    } catch (error) {
-      console.error("Logout error:", error);
+    } catch {
+      toast.error("Couldn't sign out. Please try again.");
+      router.push("/");
     }
   };
 
+  // TODO: Home href "/" causes redirect to /home; using "/home" would avoid extra hop
   const navItems = [
     { label: "Home", href: "/", icon: Home },
     { label: "Wallet", href: "/wallet", icon: Wallet },

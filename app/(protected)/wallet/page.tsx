@@ -7,10 +7,15 @@ import WalletDashboard from "@/components/wallet/WalletDashboard";
 export default function WalletPage() {
   const { user } = useAuthStore();
 
-  if (!user?.vitrin_connected) {
-    return <ConnectWalletCard />;
-  }
-
-  return <WalletDashboard />;
+  return (
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-foreground">Wallet</h1>
+      {!user?.vitrin_connected ? (
+        <ConnectWalletCard />
+      ) : (
+        <WalletDashboard />
+      )}
+    </div>
+  );
 }
 

@@ -29,7 +29,9 @@ export default function ConnectWalletCard() {
 
       toast.success("Vit-Rin account connected successfully!");
     } catch (error: any) {
-      toast.error(error.response?.data?.error || "Failed to connect Vit-Rin account");
+      toast.error(
+        error?.response?.data?.error || "Couldn't connect. Please try again."
+      );
     } finally {
       setIsConnecting(false);
     }
@@ -48,13 +50,13 @@ export default function ConnectWalletCard() {
               Connect Vit-Rin Account
             </h3>
             <p className="text-sm text-default-500 max-w-md">
-              Connect your Vit-Rin account to enable Y-COIN swaps and unlock exclusive rewards
+              Connect your Vit-Rin account to swap Y-COIN.
             </p>
           </div>
 
           <div className="flex items-center gap-2 text-primary/80 text-sm">
             <Sparkles className="w-4 h-4" />
-            <span>Earn rewards and swap tokens seamlessly</span>
+            <span>Required for Y-COIN swaps.</span>
           </div>
 
           <Button

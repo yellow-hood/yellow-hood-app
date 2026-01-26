@@ -27,9 +27,10 @@ export default function LoginPage() {
     try {
       await login({ email, password });
       toast.success("Welcome back!");
+      // TODO: Could push /home directly to avoid extra round-trip via /
       router.push("/");
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Login failed");
+      toast.error(err?.response?.data?.error || "Login failed. Please try again.");
     }
   };
 
@@ -44,7 +45,7 @@ export default function LoginPage() {
             Sign In
           </h1>
           <p className="text-sm text-default-500 text-center">
-            Enter your credentials to access your account
+            Sign in with your email and password.
           </p>
         </CardHeader>
         <CardBody className="gap-4">

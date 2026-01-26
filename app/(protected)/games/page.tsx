@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import gameService from "@/services/gameService";
 import GameCard from "@/components/games/GameCard";
+import { toast } from "sonner";
 import type { Game } from "@/types";
 
 export default function GamesPage() {
@@ -17,25 +18,36 @@ export default function GamesPage() {
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching games:", error);
+        toast.error(
+          error?.response?.data?.error || "Couldn't load games. Please try again."
+        );
         setIsLoading(false);
       });
   }, []);
 
   if (isLoading) {
     return (
-      <div className="text-center py-8 text-default-500">Loading games...</div>
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold text-foreground">Games</h1>
+        <div className="text-center py-12 text-default-500">Loading…</div>
+      </div>
     );
   }
 
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-foreground">Games</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {games.map((game) => (
-          <GameCard key={game.id} game={game} />
-        ))}
-      </div>
+      {games.length === 0 ? (
+        <div className="text-center py-12 text-default-500">
+          No games yet.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {games.map((game) => (
+            <GameCard key={game.id} game={game} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
