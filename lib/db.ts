@@ -2,6 +2,17 @@ import type { User, Wallet, Session, Transaction } from "@/types";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 
+function logDbError(source: string, error: unknown): void {
+  const message = error instanceof Error ? error.message : undefined;
+
+  if (message) {
+    console.error("Database helper error", { source, message, error });
+    return;
+  }
+
+  console.error("Database helper error", { source, error });
+}
+
 // User functions
 export async function findUser(email?: string, id?: string): Promise<User | undefined> {
   try {
@@ -25,7 +36,7 @@ export async function findUser(email?: string, id?: string): Promise<User | unde
     }
     return undefined;
   } catch (error) {
-    console.error("Error finding user:", error);
+    logDbError("db.findUser", error);
     return undefined;
   }
 }
@@ -39,7 +50,7 @@ export async function findUserByVitrinId(vitrinUserId: string): Promise<User | u
     if (!user) return undefined;
     return mapPrismaUserToUser(user);
   } catch (error) {
-    console.error("Error finding user by Vitrin ID:", error);
+    logDbError("db.findUserByVitrinId", error);
     return undefined;
   }
 }
@@ -84,7 +95,7 @@ export async function createUser(
     if (!user) throw new Error("Failed to create user");
     return mapPrismaUserToUser(user);
   } catch (error) {
-    console.error("Error creating user:", error);
+    logDbError("db.createUser", error);
     throw error;
   }
 }
@@ -102,7 +113,7 @@ export async function verifyPassword(userId: string, password: string): Promise<
 
     // Check if password is already a bcrypt-style hash (starts with $2a$, $2b$, or $2y$)
     const isBcryptHash = /^\$2[aby]\$/.test(user.password);
-    
+
     if (isBcryptHash) {
       // Compare password with stored hash (bcryptjs compatible with bcrypt hashes)
       const isValid = await bcrypt.compare(password, user.password);
@@ -117,7 +128,7 @@ export async function verifyPassword(userId: string, password: string): Promise<
       return user.password === password;
     }
   } catch (error) {
-    console.error("Error verifying password:", error);
+    logDbError("db.verifyPassword", error);
     return false;
   }
 }
@@ -141,7 +152,7 @@ export async function updateUser(
     });
     return mapPrismaUserToUser(updatedUser);
   } catch (error) {
-    console.error("Error updating user:", error);
+    logDbError("db.updateUser", error);
     return null;
   }
 }
@@ -166,7 +177,7 @@ export async function createSession(
 
     return mapPrismaSessionToSession(newSession);
   } catch (error) {
-    console.error("Error creating session:", error);
+    logDbError("db.createSession", error);
     throw error;
   }
 }
@@ -190,7 +201,7 @@ export async function findSession(token: string): Promise<Session | undefined> {
 
     return mapPrismaSessionToSession(session);
   } catch (error) {
-    console.error("Error finding session:", error);
+    logDbError("db.findSession", error);
     return undefined;
   }
 }
@@ -202,7 +213,7 @@ export async function deleteSession(token: string): Promise<boolean> {
     });
     return true;
   } catch (error) {
-    // If session doesn't exist, Prisma throws an error
+    logDbError("db.deleteSession", error);
     return false;
   }
 }
@@ -216,7 +227,7 @@ export async function getWallet(userId: string): Promise<Wallet | undefined> {
     if (!wallet) return undefined;
     return mapPrismaWalletToWallet(wallet);
   } catch (error) {
-    console.error("Error getting wallet:", error);
+    logDbError("db.getWallet", error);
     return undefined;
   }
 }
@@ -233,7 +244,7 @@ export async function updateBalance(userId: string, amount: number): Promise<Wal
     });
     return mapPrismaWalletToWallet(wallet);
   } catch (error) {
-    console.error("Error updating balance:", error);
+    logDbError("db.updateBalance", error);
     return null;
   }
 }
@@ -257,7 +268,7 @@ export async function addTransaction(
 
     return mapPrismaTransactionToTransaction(newTransaction);
   } catch (error) {
-    console.error("Error adding transaction:", error);
+    logDbError("db.addTransaction", error);
     throw error;
   }
 }
@@ -271,7 +282,7 @@ export async function getTransactions(userId: string): Promise<Transaction[]> {
 
     return transactions.map(mapPrismaTransactionToTransaction);
   } catch (error) {
-    console.error("Error getting transactions:", error);
+    logDbError("db.getTransactions", error);
     return [];
   }
 }

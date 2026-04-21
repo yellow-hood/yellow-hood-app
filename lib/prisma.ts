@@ -1,25 +1,42 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
-import { Pool } from 'pg'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-const connectionString = process.env.DATABASE_URL
-
-if (!connectionString) {
-  throw new Error('DATABASE_URL environment variable is not set')
-}
-
-const pool = new Pool({ connectionString })
-const adapter = new PrismaPg(pool)
-
-export const prisma =
-  globalForPrisma.prisma ??
+const createPrismaClient = (): PrismaClient =>
   new PrismaClient({
-    adapter,
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+let prismaClient: PrismaClient | undefined
+
+const getPrismaClient = (): PrismaClient => {
+  if (process.env.NODE_ENV === 'production') {
+    if (!prismaClient) prismaClient = createPrismaClient()
+    return prismaClient
+  }
+
+  if (!globalForPrisma.prisma) globalForPrisma.prisma = createPrismaClient()
+  return globalForPrisma.prisma
+}
+
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, property, receiver) {
+    const client = getPrismaClient()
+    const value = Reflect.get(client, property, receiver)
+    return typeof value === 'function' ? value.bind(client) : value
+  },
+  set(_target, property, value, receiver) {
+    return Reflect.set(getPrismaClient(), property, value, receiver)
+  },
+  has(_target, property) {
+    return Reflect.has(getPrismaClient(), property)
+  },
+  ownKeys() {
+    return Reflect.ownKeys(getPrismaClient())
+  },
+  getOwnPropertyDescriptor(_target, property) {
+    return Reflect.getOwnPropertyDescriptor(getPrismaClient(), property)
+  },
+})
