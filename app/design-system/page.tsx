@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { Card, CardBody, Divider, Spinner } from "@nextui-org/react";
+import { Card, CardBody, Chip, Divider, Spinner } from "@nextui-org/react";
 
 const CONTROL_RADIUS_CLASS = "rounded-button-lg";
 const DOC_CARD_CLASS =
@@ -855,32 +855,38 @@ function DSSelect() {
 }
 
 function BadgeGroup({ title, mode }: { title: string; mode: "status" | "numeric" | "dot" }) {
-  const badges =
+  const entries: { label: string; color: "success" | "warning" | "danger" }[] =
     mode === "status"
-      ? ["Active", "Pending", "Blocked"]
+      ? [
+          { label: "Active", color: "success" },
+          { label: "Pending", color: "warning" },
+          { label: "Blocked", color: "danger" },
+        ]
       : mode === "numeric"
-        ? ["1", "12", "99+"]
-        : ["Online", "Syncing", "Offline"];
+        ? [
+            { label: "1", color: "success" },
+            { label: "12", color: "warning" },
+            { label: "99+", color: "danger" },
+          ]
+        : [
+            { label: "Online", color: "success" },
+            { label: "Syncing", color: "warning" },
+            { label: "Offline", color: "danger" },
+          ];
 
   return (
     <div className="space-y-4 rounded-xl bg-zinc-50 p-6 dark:bg-zinc-900">
       <p className="text-sm font-semibold text-foreground">{title}</p>
       <div className="flex flex-wrap gap-3">
-        {badges.map((label, index) => (
-          <span
+        {entries.map(({ label, color }) => (
+          <Chip
             key={label}
-            className={[
-              "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold",
-              index === 0
-                ? "border-emerald-300 bg-emerald-100 text-emerald-800 dark:border-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-                : index === 1
-                  ? "border-amber-300 bg-amber-100 text-amber-800 dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
-                  : "border-red-300 bg-red-100 text-red-800 dark:border-red-700 dark:bg-red-900/40 dark:text-red-300",
-            ].join(" ")}
+            color={color}
+            variant={mode === "dot" ? "dot" : "flat"}
+            size="sm"
           >
-            {mode === "dot" && <span className="h-2 w-2 rounded-full bg-current" />}
             {label}
-          </span>
+          </Chip>
         ))}
       </div>
     </div>
@@ -888,31 +894,22 @@ function BadgeGroup({ title, mode }: { title: string; mode: "status" | "numeric"
 }
 
 function ChipGroup({ title, removable }: { title: string; removable: boolean }) {
-  const states = ["default", "hover", "active", "disabled"];
   return (
     <div className="space-y-4 rounded-xl bg-zinc-50 p-6 dark:bg-zinc-900">
       <p className="text-sm font-semibold text-foreground">{title}</p>
       <div className="flex flex-wrap gap-3">
-        {states.map((state) => (
-          <button
-            key={state}
-            type="button"
-            disabled={state === "disabled"}
-            className={[
-              "inline-flex items-center gap-2 border px-3 py-1.5 text-xs font-semibold transition",
-              CONTROL_RADIUS_CLASS,
-              state === "active"
-                ? "border-primary bg-primary text-background"
-                : state === "hover"
-                  ? "border-zinc-400 bg-zinc-200 text-foreground dark:border-zinc-600 dark:bg-zinc-700"
-                  : "border-default-300 bg-background text-foreground",
-              state === "disabled" ? "cursor-not-allowed border-zinc-300 bg-zinc-200 text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800" : "",
-            ].join(" ")}
-          >
-            {state}
-            {removable && state !== "disabled" && <span className="text-sm leading-none">×</span>}
-          </button>
-        ))}
+        <Chip variant="bordered" size="sm" onClose={removable ? () => {} : undefined}>
+          default
+        </Chip>
+        <Chip variant="flat" size="sm" onClose={removable ? () => {} : undefined}>
+          hover
+        </Chip>
+        <Chip color="primary" variant="solid" size="sm" onClose={removable ? () => {} : undefined}>
+          active
+        </Chip>
+        <Chip variant="bordered" size="sm" isDisabled>
+          disabled
+        </Chip>
       </div>
     </div>
   );
