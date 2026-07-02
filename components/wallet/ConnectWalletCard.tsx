@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardBody, Button } from "@nextui-org/react";
+import { Card, CardContent } from "@qpub/qui";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Link2, Sparkles } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import api from "@/services/api";
@@ -29,8 +30,8 @@ export default function ConnectWalletCard() {
   };
 
   return (
-    <Card shadow="sm">
-      <CardBody className="p-6">
+    <Card>
+      <CardContent className="p-6">
         <div className="flex flex-col items-center text-center gap-4">
           <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
             <Link2 className="w-8 h-8 text-primary" />
@@ -48,18 +49,18 @@ export default function ConnectWalletCard() {
             <span>Required for Y-COIN swaps.</span>
           </div>
 
-          <Button
+          <AnimatedButton
             color="primary"
             size="lg"
-            onPress={handleConnect}
+            onClick={handleConnect}
             isLoading={isConnecting}
-            className="mt-2 font-semibold"
-            startContent={!isConnecting && <Link2 className="w-5 h-5" />}
+            startContent={<Link2 className="w-5 h-5" />}
+            className="mt-2"
           >
-            {isConnecting ? "Connecting..." : "Connect Vit-Rin"}
-          </Button>
+            Connect Vit-Rin
+          </AnimatedButton>
         </div>
-      </CardBody>
+      </CardContent>
     </Card>
   );
 }

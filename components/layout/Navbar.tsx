@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  Navbar as NextUINavbar,
-  NavbarContent,
-  NavbarItem,
-  Avatar,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-} from "@nextui-org/react";
+import { Button, Avatar, AvatarImage, AvatarFallback, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@qpub/qui";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { Settings, LogOut } from "lucide-react";
@@ -42,10 +32,11 @@ export default function Navbar() {
   };
 
   return (
-    <NextUINavbar maxWidth="xl">
-      <NavbarContent justify="start">
+    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="relative w-8 h-8 flex shrink-0 items-center justify-center">
+          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center">
             <Image
               src="/Yellow-hood-light-icon.svg"
               alt="Yellow Hood Logo"
@@ -61,73 +52,55 @@ export default function Navbar() {
               className="hidden object-contain dark:block"
             />
           </div>
-          <span className="font-bold text-xl">Yellow Hood</span>
+          <span className="text-xl font-bold">Yellow Hood</span>
         </Link>
-      </NavbarContent>
 
-      <NavbarContent justify="end">
-        <NavbarItem>
+        {/* Right side */}
+        <div className="flex items-center gap-2">
           <Button
             isIconOnly
             variant="light"
-            onPress={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label="Toggle theme"
           >
             {mounted ? (
-              theme === "dark" ? (
-                <SunLinearIcon size={20} />
-              ) : (
-                <MoonLinearIcon size={20} />
-              )
+              theme === "dark" ? <SunLinearIcon size={20} /> : <MoonLinearIcon size={20} />
             ) : (
               <SunLinearIcon size={20} />
             )}
           </Button>
-        </NavbarItem>
 
-        {isAuthenticated && user ? (
-          <NavbarItem>
-            <Dropdown placement="bottom-end">
-              <DropdownTrigger>
-                <Avatar
-                  src={user.avatar_url || undefined}
-                  name={user.username}
-                  size="sm"
-                  className="cursor-pointer"
-                  showFallback
-                />
-              </DropdownTrigger>
-              <DropdownMenu aria-label="User menu" variant="flat">
-                <DropdownItem key="profile" textValue="Profile" isReadOnly className="h-14 gap-2">
+          {isAuthenticated && user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="h-8 w-8 cursor-pointer">
+                  <AvatarImage src={user.avatar_url || undefined} alt={user.username} />
+                  <AvatarFallback>{user.username?.[0]?.toUpperCase() ?? "U"}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuLabel>
                   <p className="font-semibold">Signed in as</p>
                   <p className="text-sm text-default-500">{user.email}</p>
-                </DropdownItem>
-                <DropdownItem
-                  key="settings"
-                  startContent={<Settings className="w-4 h-4" />}
-                  onPress={() => router.push("/settings")}
-                >
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push("/settings")}>
+                  <Settings className="mr-2 h-4 w-4" />
                   Settings
-                </DropdownItem>
-                <DropdownItem
-                  key="logout"
-                  color="danger"
-                  startContent={<LogOut className="w-4 h-4" />}
-                  onPress={handleLogout}
-                >
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout} className="text-error focus:text-error">
+                  <LogOut className="mr-2 h-4 w-4" />
                   Logout
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </NavbarItem>
-        ) : (
-          <NavbarItem>
-            <Button as={Link} href="/login" variant="flat" color="primary" size="sm">
-              Login
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="flat" color="primary" size="sm">
+              <Link href="/login">Login</Link>
             </Button>
-          </NavbarItem>
-        )}
-      </NavbarContent>
-    </NextUINavbar>
+          )}
+        </div>
+      </div>
+    </nav>
   );
 }

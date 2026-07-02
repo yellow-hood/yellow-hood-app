@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardContent } from "@qpub/qui";
 import { Coins, Gamepad2 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useWalletStore } from "@/store/useWalletStore";
@@ -33,22 +33,22 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6">
-      <Card shadow="sm">
-        <CardBody className="p-6">
+      <Card>
+        <CardContent className="p-6">
           <h1 className="text-3xl font-bold">
             Hello, {user?.username || "User"}
           </h1>
-        </CardBody>
+        </CardContent>
       </Card>
 
-      <Card shadow="sm">
-        <CardBody className="p-6">
+      <Card>
+        <CardContent className="p-6">
           <div className="flex items-center gap-2 text-default-500 text-sm mb-2">
             <Coins className="w-4 h-4" />
             <span>Balance</span>
           </div>
           <h2 className="text-3xl font-bold">{balance.toFixed(2)} Y-COIN</h2>
-        </CardBody>
+        </CardContent>
       </Card>
 
       {featuredGame && (

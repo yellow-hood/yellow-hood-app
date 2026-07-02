@@ -1,14 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardBody,
-  Input,
-  Button,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
+import { Button, Card, CardContent, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@qpub/qui";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { Input } from "@/components/ui/Input";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -58,8 +53,8 @@ export default function SettingsPage() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Settings</h1>
 
-      <Card shadow="sm">
-        <CardBody className="p-6">
+      <Card>
+        <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
               label="Username"
@@ -71,31 +66,33 @@ export default function SettingsPage() {
 
             <Select
               label="Theme"
-              selectedKeys={[selectedTheme]}
-              onSelectionChange={(keys) => {
-                const selected = Array.from(keys)[0] as string;
-                setSelectedTheme(selected);
-              }}
+              value={selectedTheme}
+              onValueChange={setSelectedTheme}
               variant="bordered"
             >
-              <SelectItem key="dark" value="dark">Dark</SelectItem>
-              <SelectItem key="light" value="light">Light</SelectItem>
+              <SelectTrigger>
+                <SelectValue placeholder="Select theme" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="dark">Dark</SelectItem>
+                <SelectItem value="light">Light</SelectItem>
+              </SelectContent>
             </Select>
 
-            <Button type="submit" color="primary" size="lg" isLoading={isLoading} className="font-semibold">
+            <AnimatedButton type="submit" color="primary" size="lg" isLoading={isLoading}>
               Save Changes
-            </Button>
+            </AnimatedButton>
           </form>
-        </CardBody>
+        </CardContent>
       </Card>
 
-      <Card shadow="sm">
-        <CardBody className="p-6">
+      <Card>
+        <CardContent className="p-6">
           <h2 className="text-xl font-bold mb-4">Account</h2>
-          <Button color="danger" variant="flat" onPress={handleLogout} className="font-semibold">
+          <Button color="error" variant="flat" onClick={handleLogout} className="font-semibold">
             Logout
           </Button>
-        </CardBody>
+        </CardContent>
       </Card>
     </div>
   );

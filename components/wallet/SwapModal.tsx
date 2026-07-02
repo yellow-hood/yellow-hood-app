@@ -1,16 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-} from "@nextui-org/react";
-import { Coins, ArrowRightLeft } from "lucide-react";
+import { Button, Spinner, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@qpub/qui";
+import { Input } from "@/components/ui/Input";
+import { ArrowRightLeft } from "lucide-react";
 import { useWalletStore } from "@/store/useWalletStore";
 import { toast } from "sonner";
 
@@ -50,26 +43,27 @@ export default function SwapModal({ isOpen, onClose, currentBalance }: SwapModal
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} placement="center">
-      <ModalContent>
-        <ModalHeader>
-          <div className="flex items-center gap-2">
-            <ArrowRightLeft className="w-5 h-5 text-primary" />
-            <span>Swap Y-COIN</span>
-          </div>
-        </ModalHeader>
-        <ModalBody>
+    <Dialog isOpen={isOpen} onOpenChange={(open) => { if (!open) handleClose(); }}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            <div className="flex items-center gap-2">
+              <ArrowRightLeft className="w-5 h-5 text-primary" />
+              <span>Swap Y-COIN</span>
+            </div>
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4 py-2">
           <p className="text-sm text-default-500">
             Available Balance: <span className="font-semibold text-foreground">{currentBalance} Y-COIN</span>
           </p>
           <Input
             type="number"
             label="Amount"
-            labelPlacement="outside"
             placeholder="Amount in Y-COIN"
             value={amount}
             onValueChange={setAmount}
-            startContent={<Coins className="w-4 h-4 text-default-400" />}
             variant="bordered"
             min="0"
             max={currentBalance.toString()}
@@ -77,22 +71,26 @@ export default function SwapModal({ isOpen, onClose, currentBalance }: SwapModal
           <p className="text-xs text-default-400">
             Processed via Vit-Rin. May take a few moments.
           </p>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={handleClose}>
+        </div>
+
+        <DialogFooter>
+          <Button variant="light" onClick={handleClose}>
             Cancel
           </Button>
           <Button
             color="primary"
-            onPress={handleSwap}
-            isLoading={isLoading}
+            onClick={handleSwap}
+            disabled={isLoading}
             className="font-semibold"
-            startContent={!isLoading && <ArrowRightLeft className="w-4 h-4" />}
           >
-            {isLoading ? "Processing..." : "Confirm Swap"}
+            {isLoading ? (
+              <span className="flex items-center gap-2"><Spinner size="sm" />Processing...</span>
+            ) : (
+              <span className="flex items-center gap-2"><ArrowRightLeft className="w-4 h-4" />Confirm Swap</span>
+            )}
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

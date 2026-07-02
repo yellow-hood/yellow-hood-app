@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Spinner } from "@nextui-org/react";
+import { Spinner } from "@qpub/qui";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {

@@ -2,7 +2,8 @@
 "use client";
 
 import React from "react";
-import { Card, CardBody, Chip, Divider, Spinner } from "@nextui-org/react";
+import { Card, CardContent, Separator, Spinner } from "@qpub/qui";
+import { Chip } from "@/components/ui/Chip";
 
 const CONTROL_RADIUS_CLASS = "rounded-button-lg";
 const DOC_CARD_CLASS =
@@ -138,28 +139,28 @@ export default function DesignSystemPage() {
                 titleText="The quick brown fox jumps over the lazy dog"
                 description="Reserved for one primary title per page."
               />
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
               <TypographySample
                 label="H2 / Section title"
                 titleClass="text-2xl font-bold md:text-3xl"
                 titleText="The quick brown fox jumps over the lazy dog"
                 description="Use for major content groups and section starts."
               />
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
               <TypographySample
                 label="Lead / Intro copy"
                 titleClass="text-lead font-light text-text-secondary"
                 titleText="Lead copy gives framing context and helps users scan content quickly."
                 description="Keep it short and avoid putting actions inside lead text."
               />
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
               <TypographySample
                 label="Body / Default copy"
                 titleClass="text-base leading-relaxed text-foreground"
                 titleText="Body text handles instructions, supporting details, and guidance."
                 description="Prefer complete sentences with concise structure."
               />
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
               <TypographySample
                 label="Label / Forms and controls"
                 titleClass="text-xs font-label text-foreground"
@@ -193,7 +194,7 @@ export default function DesignSystemPage() {
                 <ColorScaleGrid title="Zinc (Neutral)" scale="zinc" swatches={ZINC_SWATCHES} />
               </div>
 
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
 
               <div className="space-y-6">
                 <SubgroupHeader
@@ -207,7 +208,7 @@ export default function DesignSystemPage() {
                 </div>
               </div>
 
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
 
               <div className="space-y-6">
                 <SubgroupHeader
@@ -308,7 +309,7 @@ export default function DesignSystemPage() {
               <ButtonMatrix variant="ghost" title="Ghost / Tertiary" />
               <ButtonMatrix variant="danger" title="Danger" />
 
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
 
               <div className="space-y-6">
                 <SubgroupHeader
@@ -368,7 +369,7 @@ export default function DesignSystemPage() {
                 <DSInput title="Loading" label="Search" placeholder="Looking up data…" state="loading" hint="Fetching recommendations..." />
               </div>
 
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
 
               <div className="grid gap-8 md:grid-cols-2">
                 <DSTextarea />
@@ -404,7 +405,7 @@ export default function DesignSystemPage() {
                 </div>
               </div>
 
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
 
               <div className="space-y-6">
                 <SubgroupHeader
@@ -444,7 +445,7 @@ export default function DesignSystemPage() {
                 </div>
               </div>
 
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
 
               <div className="space-y-6">
                 <SubgroupHeader
@@ -484,7 +485,7 @@ export default function DesignSystemPage() {
                 </div>
               </div>
 
-              <Divider className="bg-default-100" />
+              <Separator className="bg-default-100" />
 
               <div className="grid gap-8 md:grid-cols-2">
                 <DSTabs />
@@ -543,7 +544,7 @@ function UsageBlock({ guidance }: { guidance: UsageGuidance }) {
 function DocCard({ children }: { children: React.ReactNode }) {
   return (
     <Card className={DOC_CARD_CLASS}>
-      <CardBody className="space-y-8 p-8 md:p-10">{children}</CardBody>
+      <CardContent className="space-y-8 p-8 md:p-10">{children}</CardContent>
     </Card>
   );
 }

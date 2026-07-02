@@ -1,6 +1,8 @@
 "use client";
 
-import { Card, CardBody, Button, Image } from "@nextui-org/react";
+import { Card, CardContent } from "@qpub/qui";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import Image from "next/image";
 import { Play, Gamepad2 } from "lucide-react";
 import type { Game } from "@/types";
 
@@ -14,19 +16,17 @@ export default function GameCard({ game }: GameCardProps) {
   };
 
   return (
-    <Card shadow="sm" isPressable={false}>
-      <div className="relative aspect-video overflow-hidden">
+    <Card>
+      <div className="relative aspect-video overflow-hidden rounded-t-lg">
         <Image
           src={game.thumbnail_url}
           alt={game.title}
-          width="100%"
-          height="100%"
+          fill
           className="object-cover"
-          fallbackSrc="https://via.placeholder.com/400x225/0D0D0D/FFD12D?text=Game"
         />
       </div>
 
-      <CardBody className="p-4 space-y-3">
+      <CardContent className="p-4 space-y-3">
         <div className="space-y-1">
           <h3 className="text-lg font-bold line-clamp-1">{game.title}</h3>
           <div className="flex items-center gap-2">
@@ -35,16 +35,15 @@ export default function GameCard({ game }: GameCardProps) {
           </div>
         </div>
 
-        <Button
+        <AnimatedButton
           color="primary"
+          onClick={handlePlay}
           fullWidth
-          onPress={handlePlay}
-          className="font-semibold"
           startContent={<Play className="w-4 h-4" />}
         >
           Play Now
-        </Button>
-      </CardBody>
+        </AnimatedButton>
+      </CardContent>
     </Card>
   );
 }

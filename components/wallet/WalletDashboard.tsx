@@ -1,18 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Chip,
-} from "@nextui-org/react";
+import { Card, CardContent, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@qpub/qui";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { Chip } from "@/components/ui/Chip";
 import { History } from "lucide-react";
 import { useWalletStore } from "@/store/useWalletStore";
 import SwapModal from "./SwapModal";
@@ -67,8 +58,8 @@ export default function WalletDashboard() {
 
   return (
     <div className="space-y-6">
-      <Card shadow="sm">
-        <CardBody className="p-6">
+      <Card>
+        <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-default-500 text-sm">
@@ -84,23 +75,22 @@ export default function WalletDashboard() {
               <YCoinIcon size={40} className="text-primary" />
             </div>
           </div>
-        </CardBody>
+        </CardContent>
       </Card>
 
       <div className="flex justify-center">
-        <Button
+        <AnimatedButton
           color="primary"
           size="lg"
-          onPress={() => setIsSwapModalOpen(true)}
-          className="font-semibold"
+          onClick={() => setIsSwapModalOpen(true)}
           startContent={<SwapLinearIcon size={20} />}
         >
           Swap Y-COIN
-        </Button>
+        </AnimatedButton>
       </div>
 
-      <Card shadow="sm">
-        <CardBody className="p-6">
+      <Card>
+        <CardContent className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <History className="w-5 h-5 text-primary" />
             <h3 className="text-xl font-bold">Transaction History</h3>
@@ -111,12 +101,14 @@ export default function WalletDashboard() {
           ) : transactions.length === 0 ? (
             <p className="text-center py-8 text-default-500">No transactions yet.</p>
           ) : (
-            <Table aria-label="Transaction history" removeWrapper>
+            <Table>
               <TableHeader>
-                <TableColumn>DATE</TableColumn>
-                <TableColumn>TYPE</TableColumn>
-                <TableColumn>AMOUNT</TableColumn>
-                <TableColumn>STATUS</TableColumn>
+                <TableRow>
+                  <TableHead>DATE</TableHead>
+                  <TableHead>TYPE</TableHead>
+                  <TableHead>AMOUNT</TableHead>
+                  <TableHead>STATUS</TableHead>
+                </TableRow>
               </TableHeader>
               <TableBody>
                 {transactions.map((transaction) => (
@@ -140,7 +132,7 @@ export default function WalletDashboard() {
               </TableBody>
             </Table>
           )}
-        </CardBody>
+        </CardContent>
       </Card>
 
       <SwapModal

@@ -2,3 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --radius: 0.75rem;
+    --font-sans: var(--font-nunito), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    /* Yellow Hood Design System tokens */
+    --primary: 0.8624 0.1497 86.22;
+    --primary-foreground: 0.2 0.004 286;
+    --secondary: 0.7022 0.224 313.38;
+    --secondary-foreground: 1 0 0;
+    --warning: 0.7151 0.1867 42.71;
+    --warning-foreground: 1 0 0;
+    --error: 0.6193 0.2419 11.32;
+    --error-foreground: 1 0 0;
+    --success: 0.7329 0.1934 150.84;
+    --success-foreground: 1 0 0;
+    --background: 1 0 0;
+    --foreground: 0.2103 0.0059 285.82;
+    --border: 0.907 0.0013 286.37;
+
+    /* @qpub/qui required tokens */
+    --card: 1 0 0;
+    --card-foreground: 0 0 0;
+    --popover: 1 0 0;
+    --popover-foreground: 0 0 0;
+    --popover-border: 0.907 0.0013 286.37;
+    --muted: 0.5692 0.008 268.5;
+    --muted-foreground: 1 0 0;
+    --accent: 0.9614 0.0013 286.38;
+    --accent-foreground: 0 0 0;
+    --ring: 0.8624 0.1497 86.22;
+    --dialog: 0.9884 0.0013 286.38;
+    --info: 0.7663 0.130483 196.6605;
+    --info-foreground: 1 0 0;
+    --debug: 0.6311 0.2071 284.74;
+    --debug-foreground: 1 0 0;
+    --fatal: 0.5613 0.2248 17.67;
+    --fatal-foreground: 1 0 0;
+    --sidebar: 0.9794 0.0013 286.38;
+    --sidebar-foreground: 0 0 0;
+    --sidebar-primary: 0.8624 0.1497 86.22;
+    --sidebar-primary-foreground: 0.2 0.004 286;
+    --sidebar-accent: 0.9614 0.0013 286.38;
+    --sidebar-accent-foreground: 0 0 0;
+    --sidebar-border: 0.907 0.0013 286.37;
+    --sidebar-ring: 0.8624 0.1497 86.22;
+    --chart-1: 0.8624 0.1497 86.22;
+    --chart-2: 0.7022 0.224 313.38;
+    --chart-3: 0.6311 0.2071 284.74;
+    --chart-4: 0.7329 0.1934 150.84;
+    --chart-5: 0.7151 0.1867 42.71;
+    --chart-6: 0.6193 0.2419 11.32;
+  }
+
+  html.dark,
+  [data-theme="dark"] {
+    --primary: 0.8284 0.1581 79.17;
+    --primary-foreground: 0.2 0.004 286;
+    --secondary: 0.6392 0.2163 313.44;
+    --secondary-foreground: 1 0 0;
+    --warning: 0.7421 0.1657 44.06;
+    --warning-foreground: 0.2 0.004 286;
+    --error: 0.6563 0.2185 4.62;
+    --error-foreground: 1 0 0;
+    --success: 0.7744 0.1681 154.27;
+    --success-foreground: 0.2 0.004 286;
+    --background: 0 0 0;
+    --foreground: 0.9851 0.0001 263.28;
+    --border: 0.22 0.004 286;
+
+    /* @qpub/qui required tokens (dark) */
+    --card: 0 0 0;
+    --card-foreground: 1 0 0;
+    --popover: 0.2665 0.0092 285.76;
+    --popover-foreground: 1 0 0;
+    --popover-border: 0.3677 0.017 285.53;
+    --muted: 0.6806 0.0064 239.87;
+    --muted-foreground: 0 0 0;
+    --accent: 0.2059 0.0059 285.87;
+    --accent-foreground: 1 0 0;
+    --ring: 0.8284 0.1581 79.17;
+    --dialog: 0.1548 0.0021 286.15;
+    --info: 0.9061 0.1383 196.69;
+    --info-foreground: 0 0 0;
+    --debug: 0.7438 0.140683 288.5116;
+    --debug-foreground: 0 0 0;
+    --fatal: 0.6519 0.2411 11.52;
+    --fatal-foreground: 0 0 0;
+    --sidebar: 0.1452 0.0021 286.13;
+    --sidebar-foreground: 1 0 0;
+    --sidebar-primary: 0.8284 0.1581 79.17;
+    --sidebar-primary-foreground: 0.2 0.004 286;
+    --sidebar-accent: 0.2059 0.0059 285.87;
+    --sidebar-accent-foreground: 1 0 0;
+    --sidebar-border: 0.2186 0.0039 286.08;
+    --sidebar-ring: 0.8284 0.1581 79.17;
+    --chart-1: 0.8284 0.1581 79.17;
+    --chart-2: 0.6392 0.2163 313.44;
+    --chart-3: 0.7438 0.140683 288.5116;
+    --chart-4: 0.7744 0.1681 154.27;
+    --chart-5: 0.7421 0.1657 44.06;
+    --chart-6: 0.6563 0.2185 4.62;
+  }
+}
