@@ -3,12 +3,23 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+type OtpInputSize = "sm" | "lg";
+
 interface OtpInputProps {
   onComplete?: (otp: string) => void;
   className?: string;
+  size?: OtpInputSize;
 }
 
-export function OtpInput({ onComplete, className }: OtpInputProps) {
+// lg (48x64) is the existing, unconditional cell size this component always
+// rendered before `size` existed — kept as the default so no caller relying on
+// the untyped behavior changes without an explicit opt-in. sm (32x40) is new.
+const CELL_SIZE_CLASS: Record<OtpInputSize, string> = {
+  sm: "h-10 w-8",
+  lg: "h-16 w-12",
+};
+
+export function OtpInput({ onComplete, className, size = "lg" }: OtpInputProps) {
   const [values, setValues] = React.useState(["", "", "", ""]);
   const refs = [
     React.useRef<HTMLInputElement>(null),
@@ -60,8 +71,9 @@ export function OtpInput({ onComplete, className }: OtpInputProps) {
           onChange={(e) => handleChange(i, e)}
           onKeyDown={(e) => handleKeyDown(i, e)}
           className={cn(
-            "h-16 w-12 rounded-medium border text-center text-xl font-semibold outline-none transition-colors",
-            "border-default-200 bg-background text-foreground",
+            "rounded-medium border text-center text-xl font-semibold outline-none transition-colors",
+            CELL_SIZE_CLASS[size],
+            "border-default-200 dark:border-default-800 bg-background text-foreground",
             "focus:border-2 focus:border-default-400",
           )}
         />

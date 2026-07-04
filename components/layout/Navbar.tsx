@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Avatar, AvatarImage, AvatarFallback, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@qpub/qui";
+import { Avatar, AvatarImage, AvatarFallback, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@qpub/qui";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { Settings, LogOut } from "lucide-react";
@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Button } from "@/components/ui/Button";
 import { MoonLinearIcon, SunLinearIcon } from "@/components/ui/icons";
 
 export default function Navbar() {
