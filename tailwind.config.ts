@@ -144,8 +144,8 @@ const config: Config = {
           900: "#18181B",
           DEFAULT: "#E4E4E7",
         },
-        // Divider — zinc-200 for light mode (referenced as border-divider in legacy code)
-        divider: "#E4E4E7",
+        // Divider — theme-aware via --divider CSS variable in globals.css (referenced as border-divider)
+        divider: "oklch(var(--divider) / <alpha-value>)",
       },
     },
   },

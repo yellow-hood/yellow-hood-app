@@ -18,9 +18,9 @@ interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 }
 
 const wallColor: Record<AnimatedButtonColor, string> = {
-  primary: "bg-primary-800",
-  secondary: "bg-secondary-800",
-  default: "bg-default-500 dark:bg-default-600",
+  primary: "bg-primary-600 dark:bg-primary-700",
+  secondary: "bg-secondary-700 dark:bg-secondary-800",
+  default: "bg-default-400 dark:bg-default-800",
 };
 
 const faceColor: Record<AnimatedButtonColor, string> = {
@@ -53,10 +53,10 @@ export function AnimatedButton({
         disabled && "cursor-not-allowed opacity-40",
       )}
     >
-      {/* static wall layer, always translated down by 4px */}
+      {/* static wall layer, riser is 8px (corrected per Design System doc) */}
       <div
         className={cn(
-          "absolute inset-x-0 bottom-0 top-1 rounded-medium",
+          "absolute inset-x-0 bottom-0 top-2 rounded-medium",
           wallColor[color],
         )}
       />
@@ -69,10 +69,15 @@ export function AnimatedButton({
         onPointerUp={() => setPressed(false)}
         onPointerLeave={() => setPressed(false)}
         className={cn(
-          "relative z-10 flex w-full items-center justify-center gap-2 rounded-medium font-semibold",
+          // Explicit height (8px shorter than the container) instead of the flex
+          // default stretch-to-fill: this is what leaves the wall layer's bottom
+          // 8px strip visible at rest (lg: 48px container -> 40px face; xl: 56px
+          // container -> 48px face). Pressing translates the face down by that
+          // same 8px so it sits flush with the wall, per the two-layer press spec.
+          "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-medium font-semibold",
           size === "xl" ? "text-base px-8" : "text-sm px-6",
           faceColor[color],
-          pressed && !disabled ? "translate-y-1" : "translate-y-0",
+          pressed && !disabled ? "translate-y-2" : "translate-y-0",
           className,
         )}
         style={{

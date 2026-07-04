@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Spinner, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@qpub/qui";
+import { Spinner, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@qpub/qui";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ArrowRightLeft } from "lucide-react";
 import { useWalletStore } from "@/store/useWalletStore";

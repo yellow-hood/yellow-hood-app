@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Card, CardContent, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@qpub/qui";
+import { Card, CardContent, Select, SelectValue, SelectContent, SelectItem } from "@qpub/qui";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { SelectTrigger } from "@/components/ui/Select";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
