@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
 import Navbar from "@/components/layout/Navbar";
@@ -10,6 +11,13 @@ const nunito = Nunito({
   subsets: ["latin"],
   weight: ["300", "400", "600", "700", "900"],
   display: "swap",
+});
+
+const iranSansXV = localFont({
+  src: "../fonts/IRANSansXV.ttf",
+  variable: "--font-iranxv",
+  display: "swap",
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={nunito.className}>
+      <body className={`${nunito.className} ${iranSansXV.variable}`}>
         <Providers>
           <div className="min-h-screen bg-background text-foreground">
             <Navbar />

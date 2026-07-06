@@ -109,3 +109,13 @@
     --chart-6: 0.6563 0.2185 4.62;
   }
 }
+
+@layer utilities {
+  /* Persian/RTL text convention: always pairs the IRANSansXV family with its
+     required 'dots' 8 variation axis, per the Design System doc. Never mix
+     this with font-nunito on the same text element. */
+  .font-fa {
+    font-family: var(--font-iranxv), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-variation-settings: 'dots' 8;
+  }
+}
