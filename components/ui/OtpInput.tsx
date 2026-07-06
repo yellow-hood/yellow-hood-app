@@ -11,12 +11,14 @@ interface OtpInputProps {
   size?: OtpInputSize;
 }
 
-// lg (48x64) is the existing, unconditional cell size this component always
-// rendered before `size` existed — kept as the default so no caller relying on
-// the untyped behavior changes without an explicit opt-in. sm (32x40) is new.
+// Heights are pinned to match components/ui/Input.tsx exactly: sm = 40px (h-10,
+// same as Input's default/md) and lg = 56px (h-14, same as Input's lg and
+// AnimatedButton's mobile xl) — width is independent and just the component's
+// own proportional cell width, not tied to Input. lg remains the default so no
+// caller relying on the untyped behavior changes without an explicit opt-in.
 const CELL_SIZE_CLASS: Record<OtpInputSize, string> = {
   sm: "h-10 w-8",
-  lg: "h-16 w-12",
+  lg: "h-14 w-12",
 };
 
 export function OtpInput({ onComplete, className, size = "lg" }: OtpInputProps) {

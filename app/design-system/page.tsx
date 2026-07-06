@@ -23,8 +23,6 @@ import {
   TabsContent,
   Select,
   SelectValue,
-  SelectContent,
-  SelectItem,
 } from "@qpub/qui";
 import { useTheme } from "next-themes";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
@@ -32,7 +30,7 @@ import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Input } from "@/components/ui/Input";
 import { OtpInput } from "@/components/ui/OtpInput";
-import { SelectTrigger } from "@/components/ui/Select";
+import { SelectTrigger, SelectContent, SelectItem } from "@/components/ui/Select";
 import { MoonLinearIcon, SunLinearIcon, SettingsLinearIcon } from "@/components/ui/icons";
 
 // Real control radius token (Yellow Hood Design System radius tokens, tailwind.config.ts).
@@ -199,11 +197,15 @@ const ALERT_TOKENS = [
   { color: "info", name: "Info" },
 ] as const;
 
+// Pixel values are measured from the rendered h-*/w-* classes below (32/40/56/64px),
+// not copied from the Design System doc — the doc says `lg` is 48px, but the real
+// rendered size is 56px (h-14), a genuine doc/code mismatch. `xl` isn't in the doc
+// at all; 64px (h-16) is what's actually implemented here.
 const AVATAR_SIZES = [
-  { size: "sm", avatarClass: "h-8 w-8", textClass: "text-xs", initials: "YH" },
-  { size: "md", avatarClass: "h-10 w-10", textClass: "text-sm", initials: "KM" },
-  { size: "lg", avatarClass: "h-14 w-14", textClass: "text-base", initials: "AN" },
-  { size: "xl", avatarClass: "h-16 w-16", textClass: "text-lg", initials: "FH" },
+  { size: "sm", px: 32, avatarClass: "h-8 w-8", textClass: "text-xs", initials: "YH" },
+  { size: "md", px: 40, avatarClass: "h-10 w-10", textClass: "text-sm", initials: "KM" },
+  { size: "lg", px: 56, avatarClass: "h-14 w-14", textClass: "text-base", initials: "AN" },
+  { size: "xl", px: 64, avatarClass: "h-16 w-16", textClass: "text-lg", initials: "FH" },
 ] as const;
 
 type UsageGuidance = {
@@ -260,7 +262,6 @@ export default function DesignSystemPage() {
             <NavPill href="#spacing-radius">Spacing & Radius</NavPill>
             <NavPill href="#buttons">Buttons</NavPill>
             <NavPill href="#inputs">Inputs</NavPill>
-            <NavPill href="#otp-input">OTP Input</NavPill>
             <NavPill href="#badges-chips">Badges & Chips</NavPill>
             <NavPill href="#avatars-cards">Avatars & Cards</NavPill>
             <NavPill href="#alerts-tabs-lists">Alerts, Tabs & Rows</NavPill>
@@ -314,23 +315,6 @@ export default function DesignSystemPage() {
                 titleText="Email address"
                 description="Keep labels specific and use sentence case."
               />
-              <Separator className="bg-default-100" />
-              <div className="space-y-4" dir="rtl">
-                <p className="text-xs font-semibold text-default-500" dir="ltr">
-                  Persian / RTL — font-iranxv token
-                </p>
-                <p className="font-iranxv text-2xl">
-                  روباه قهوه‌ای چابک از روی سگ تنبل می‌پرد
-                </p>
-                <p className="text-sm text-default-500" dir="ltr">
-                  This uses the real <code>font-iranxv</code> Tailwind class from tailwind.config.ts.
-                  As of this page&apos;s last edit, no font file, <code>next/font</code> call, or
-                  <code>@font-face</code> rule backs the <code>--font-iranxv</code> CSS variable
-                  anywhere in the app, so this text is currently rendering in the inherited fallback
-                  font rather than IRANSansXV. This gap is flagged for the codebase owners, not fixed
-                  by this page.
-                </p>
-              </div>
             </div>
           </DocCard>
           <UsageBlock
@@ -482,15 +466,9 @@ export default function DesignSystemPage() {
                   component&apos;s actual behavior today, not an omission on this page.
                 </p>
                 <p className="text-xs text-default-500">
-                  Investigation: at rest, the wall layer&apos;s `&lt;div&gt;` spans from 4px below the
-                  container top to the container bottom, but the button face is not shorter than the
-                  wall — it stretches to fill the full container height (flex default `align-items:
-                  normal`) and paints above it at `z-index: 10`, so the wall is fully covered in every
-                  state, including when pressed (measured live: container 0–48px, wall 4–48px, face
-                  0–48px in both rest and pressed states). This is a real gap in
-                  `components/ui/AnimatedButton.tsx` itself, not a spacing issue on this page — no
-                  page-level CSS change can expose it, so it is flagged for the component owner rather
-                  than patched here.
+                  Corrected 2026-07-06: the wall layer&apos;s depth (8px riser, previously fully hidden
+                  behind the face at every state) and its per-color wall colors were fixed in
+                  `components/ui/AnimatedButton.tsx` and are now working as specified above.
                 </p>
 
                 <Separator className="bg-default-100" />
@@ -498,16 +476,16 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="AnimatedButton only defines two sizes — lg for desktop and xl for mobile-only hero CTAs. Shown here in primary color only, since size is independent of color."
+                    description="AnimatedButton only defines two sizes — lg for regular primary CTAs and xl for hero/single-focus CTAs (e.g. login, onboarding), usable on any device — role-based, not device-based. Shown here in primary color only, since size is independent of color."
                   />
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2 text-center">
                       <AnimatedButton color="primary" size="lg">Continue</AnimatedButton>
-                      <p className="text-[11px] text-default-500">lg — 48px (desktop)</p>
+                      <p className="text-[11px] text-default-500">lg — 48px (regular primary CTA)</p>
                     </div>
                     <div className="space-y-2 text-center">
                       <AnimatedButton color="primary" size="xl">Continue</AnimatedButton>
-                      <p className="text-[11px] text-default-500">xl — 56px (mobile-only)</p>
+                      <p className="text-[11px] text-default-500">xl — 56px (hero / single-focus CTA)</p>
                     </div>
                   </div>
                 </div>
@@ -612,7 +590,7 @@ export default function DesignSystemPage() {
                   <div className="flex flex-wrap items-end gap-6 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2 text-center">
                       <Button variant="solid" color="primary" size="sm">Continue</Button>
-                      <p className="text-[11px] text-default-500">sm — 32px</p>
+                      <p className="text-[11px] text-default-500">sm — 28px</p>
                     </div>
                     <div className="space-y-2 text-center">
                       <Button variant="solid" color="primary" size="md">Continue</Button>
@@ -669,7 +647,7 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Only two sizes are officially supported: the default (no `size` prop, what every existing usage in the app renders today) and `lg` — 56px, matched to AnimatedButton's mobile-only `xl` height, since Input `lg` and AnimatedButton `xl` are the app's two large touch-target mobile controls. @qpub/qui's native `sm` (28px) exists in the library but is not exposed here. Both sizes share the same `rounded-medium` (12px) radius — radius does not scale with size."
+                    description="Only two sizes are officially supported: the default (no `size` prop, what every existing usage in the app renders today) and `lg` — 56px, matched to AnimatedButton's `xl` height, since Input `lg` and AnimatedButton `xl` are the app's two large touch-target controls. @qpub/qui's native `sm` (28px) exists in the library but is not exposed here. Both sizes share the same `rounded-medium` (12px) radius — radius does not scale with size."
                   />
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2">
@@ -686,12 +664,12 @@ export default function DesignSystemPage() {
 
               <Separator className="bg-default-100" />
 
-              <div className="grid gap-8 md:grid-cols-2">
-                <div className="space-y-4 rounded-xl bg-default-50 p-6 dark:bg-default-900">
-                  <p className="text-xs font-semibold text-default-500">
-                    Textarea — no components/ui or @qpub/qui primitive exists yet; styled directly with
-                    real tokens on a native element.
-                  </p>
+              <div className="space-y-4">
+                <p className="text-xs font-semibold text-default-500">
+                  Textarea — no components/ui or @qpub/qui primitive exists yet; styled directly with
+                  real tokens on a native element.
+                </p>
+                <div className="max-w-md space-y-4 rounded-xl bg-default-50 p-6 dark:bg-default-900">
                   <label htmlFor="ds-textarea" className="block text-xs font-label text-foreground">
                     Description
                   </label>
@@ -702,87 +680,114 @@ export default function DesignSystemPage() {
                     className={`w-full resize-none border border-default-200 bg-background p-4 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:border-default-800 ${CONTROL_RADIUS_CLASS}`}
                   />
                 </div>
-                <div className="space-y-4 rounded-xl bg-default-50 p-6 dark:bg-default-900">
-                  <p className="text-xs font-semibold text-default-500">Select (@qpub/qui)</p>
-                  <div className="space-y-3">
-                    <Select>
-                      <SelectTrigger className="w-full" aria-label="Role">
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="owner">Owner</SelectItem>
-                        <SelectItem value="editor">Editor</SelectItem>
-                        <SelectItem value="viewer">Viewer</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Select isDisabled>
-                      <SelectTrigger className="w-full" aria-label="Role (disabled)">
-                        <SelectValue placeholder="Disabled" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="owner">Owner</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
               </div>
-            </div>
-          </DocCard>
-          <UsageBlock
-            guidance={{
-              use: "Use helper text proactively and reserve error text for validation failures.",
-              avoid: "Replacing labels with placeholders.",
-              mistakes: "Relying only on color for state without supporting copy or focus rings.",
-            }}
-          />
-        </section>
-
-        <section id="otp-input" className="w-full max-w-5xl space-y-8">
-          <SectionHeader
-            title="OTP Input"
-            description="components/ui/OtpInput — four independent single-character cells with auto-advance and backspace-to-previous behavior."
-          />
-          <DocCard>
-            <div className="space-y-6">
-              <SubgroupHeader
-                title="Live component"
-                description="Type digits below to see real auto-advance/backspace behavior and the onComplete callback fire."
-              />
-              <div className="rounded-xl bg-default-50 p-6 dark:bg-default-900">
-                <OtpInputDemo />
-              </div>
-              <p className="text-xs text-default-500">
-                This component currently exposes no `disabled`, `error`, or `loading` props — only its
-                default and native `focus:` state are shown above. This is a real gap in the component
-                itself, not a limitation of this page; it is flagged for follow-up rather than added
-                here, since extending OtpInput.tsx is out of scope for this task.
-              </p>
 
               <Separator className="bg-default-100" />
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <SubgroupHeader
-                  title="Sizes"
-                  description="`lg` — 48×64px per cell — is the default (no `size` prop), matching the component's original unconditional size so no existing usage changes behavior. `sm` — 32×40px per cell — is a new opt-in size."
+                  title="Select (components/ui/Select)"
+                  description="Interact directly with the trigger for real hover/focus; click to open the option list and pick one to see the displayed value update live. The second example uses the component's real `isDisabled` prop."
                 />
-                <div className="flex flex-wrap items-start gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
-                  <div className="space-y-2">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">sm — 32×40px</p>
-                    <OtpInputDemo size="sm" />
+                <div className="grid gap-6 md:grid-cols-2">
+                  <Select>
+                    <SelectTrigger className="w-full" aria-label="Role">
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="editor">Editor</SelectItem>
+                      <SelectItem value="viewer">Viewer</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select isDisabled>
+                    <SelectTrigger className="w-full" aria-label="Role (disabled)">
+                      <SelectValue placeholder="Disabled" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="editor">Editor</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Separator className="bg-default-100" />
+
+                <div className="space-y-4">
+                  <SubgroupHeader
+                    title="Sizes"
+                    description="Only two sizes are officially supported: the default (no `size` prop) and `lg` — 56px, matching Input's `lg` exactly. @qpub/qui's native `sm` (28px) exists in the library but is not exposed here. Both sizes share the same `rounded-medium` (12px) radius — qui's native `rounded-xs` is overridden here on the trigger, the dropdown, and its menu items, and radius does not scale with size. Open the `lg` dropdown below: its menu item also renders at the matching larger text size — qui doesn't sync this automatically, so components/ui/Select's SelectContent/SelectItem take an explicit `size` prop that must be passed alongside the trigger's."
+                  />
+                  <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
+                    <div className="w-56 space-y-2">
+                      <Select>
+                        <SelectTrigger className="w-full" aria-label="Role, default size">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="editor">Editor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-[11px] text-default-500">default — 40px</p>
+                    </div>
+                    <div className="w-56 space-y-2">
+                      <Select>
+                        <SelectTrigger size="lg" className="w-full" aria-label="Role, large size">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent size="lg">
+                          <SelectItem size="lg" value="editor">Editor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-[11px] text-default-500">lg — 56px</p>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">lg — 48×64px (default)</p>
-                    <OtpInputDemo size="lg" />
+                </div>
+              </div>
+
+              <Separator className="bg-default-100" />
+
+              <div id="otp-input" className="space-y-6">
+                <SubgroupHeader
+                  title="OTP Input (components/ui/OtpInput)"
+                  description="Four independent single-character cells with auto-advance and backspace-to-previous behavior. Type digits below to see real behavior and the onComplete callback fire."
+                />
+                <div className="rounded-xl bg-default-50 p-6 dark:bg-default-900">
+                  <OtpInputDemo size="sm" />
+                </div>
+                <p className="text-xs text-default-500">
+                  This component currently exposes no `disabled`, `error`, or `loading` props — only its
+                  default and native `focus:` state are shown above. This is a real gap in the component
+                  itself, not a limitation of this page; it is flagged for follow-up rather than added
+                  here, since extending OtpInput.tsx is out of scope for this task.
+                </p>
+
+                <Separator className="bg-default-100" />
+
+                <div className="space-y-4">
+                  <SubgroupHeader
+                    title="Sizes"
+                    description="Cell heights are pinned to match components/ui/Input.tsx exactly — width is independent, just this component's own proportional cell width. `lg` — 48×56px per cell — is the default (no `size` prop), height-matched to Input's `lg` (56px). `sm` — 32×40px per cell — is a new opt-in size, height-matched to Input's default/md (40px)."
+                  />
+                  <div className="flex flex-wrap items-start gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">sm — 32×40px</p>
+                      <OtpInputDemo size="sm" />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">lg — 48×56px (default)</p>
+                      <OtpInputDemo size="lg" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </DocCard>
+
           <UsageBlock
             guidance={{
-              use: "Use for fixed-length numeric confirmation codes (e.g. login OTP, verification).",
-              avoid: "Using for free-form multi-character input or variable-length codes.",
-              mistakes: "Wiring up disabled/error UI that the component doesn't actually support yet.",
+              use: "Use helper text proactively and reserve error text for validation failures. For OTP entry, use components/ui/OtpInput for fixed-length numeric confirmation codes (e.g. login OTP, verification). For Select, prefer it over native selects for consistent styling and keyboard support.",
+              avoid: "Replacing labels with placeholders. For OTP, avoid free-form multi-character input or variable-length codes.",
+              mistakes: "Relying only on color for state without supporting copy or focus rings. For OTP, don't wire up disabled/error UI the component doesn't actually support yet.",
             }}
           />
         </section>
@@ -839,13 +844,13 @@ export default function DesignSystemPage() {
               <div className="space-y-6">
                 <SubgroupHeader title="Avatar (@qpub/qui)" description="Sizes and fallback initials for missing images." />
                 <div className="flex flex-wrap items-end gap-8">
-                  {AVATAR_SIZES.map(({ size, avatarClass, textClass, initials }) => (
+                  {AVATAR_SIZES.map(({ size, px, avatarClass, textClass, initials }) => (
                     <div key={size} className="space-y-2 text-center">
                       <Avatar className={avatarClass}>
                         <AvatarImage src={undefined} alt="" />
                         <AvatarFallback className={textClass}>{initials}</AvatarFallback>
                       </Avatar>
-                      <p className="text-xs text-default-500">{size.toUpperCase()}</p>
+                      <p className="text-xs text-default-500">{size.toUpperCase()} — {px}px</p>
                     </div>
                   ))}
                 </div>
