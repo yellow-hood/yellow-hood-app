@@ -70,7 +70,7 @@ export default function BottomNav() {
       initial={{ x: "-50%", y: 24, opacity: 0 }}
       animate={{ x: "-50%", y: 0, opacity: 1 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="fixed bottom-8 left-1/2 z-50 rounded-full backdrop-blur-md border border-divider bg-background/70 dark:bg-black/60 px-10 py-4 shadow-lg"
+      className="fixed bottom-8 left-1/2 z-50 rounded-full backdrop-blur-md border border-divider bg-background/70 dark:bg-background/60 px-10 py-4 shadow-lg"
       aria-label="Main navigation"
     >
       <div className="flex items-center gap-12">
