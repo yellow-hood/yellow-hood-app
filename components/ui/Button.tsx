@@ -18,10 +18,20 @@ export function Button({ size, className, ...props }: QuiButtonProps) {
     ? ("isIconOnly" in props && props.isIconOnly ? "h-10 w-10" : "h-10")
     : undefined;
 
+  // Border-radius is pinned per size to the Design System doc's Button Sizes
+  // table (sm -> 12px, md/lg -> 14px) — qui's own size variant otherwise
+  // renders rounded-sm/rounded-md/rounded-lg (2px/6px/8px), which doesn't match.
+  // tailwind-merge doesn't recognize this app's custom radius keys (medium/large)
+  // as conflicting with qui's built-in radius suffixes, so a plain override class
+  // is left in the DOM alongside qui's own with no guaranteed winner — the `!`
+  // important modifier forces the override to actually win (same pattern as
+  // components/ui/Input.tsx and components/ui/Select.tsx).
+  const radiusOverride = size === "sm" ? "!rounded-medium" : "!rounded-large";
+
   return (
     <QuiButton
       size={size}
-      className={cn(sizeOverride, className)}
+      className={cn(sizeOverride, radiusOverride, className)}
       {...(props as QuiButtonProps)}
     />
   );

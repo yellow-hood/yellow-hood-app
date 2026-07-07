@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@qpub/qui";
+import { CardContent } from "@qpub/qui";
+import { Card } from "@/components/ui/Card";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Link2, Sparkles } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";

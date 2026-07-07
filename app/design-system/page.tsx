@@ -232,7 +232,7 @@ export default function DesignSystemPage() {
               <p className="text-xs font-label uppercase tracking-[0.08em] text-default-500">
                 Documentation
               </p>
-              <h1 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+              <h1 className="text-7xl font-black">
                 Yellow Hood Design System
               </h1>
               <p className="max-w-3xl text-lead font-light text-default-500">
@@ -283,7 +283,7 @@ export default function DesignSystemPage() {
             <div className="space-y-8">
               <TypographySample
                 label="H1 / Page title"
-                titleClass="text-4xl font-black tracking-tight md:text-5xl"
+                titleClass="text-7xl font-black"
                 titleText="The quick brown fox jumps over the lazy dog"
                 description="Reserved for one primary title per page."
               />

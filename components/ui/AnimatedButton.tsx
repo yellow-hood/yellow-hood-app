@@ -56,7 +56,7 @@ export function AnimatedButton({
       {/* static wall layer, riser is 8px (corrected per Design System doc) */}
       <div
         className={cn(
-          "absolute inset-x-0 bottom-0 top-2 rounded-medium",
+          "absolute inset-x-0 bottom-0 top-2 rounded-large",
           wallColor[color],
         )}
       />
@@ -74,7 +74,7 @@ export function AnimatedButton({
           // 8px strip visible at rest (lg: 48px container -> 40px face; xl: 56px
           // container -> 48px face). Pressing translates the face down by that
           // same 8px so it sits flush with the wall, per the two-layer press spec.
-          "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-medium font-semibold",
+          "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-large font-semibold",
           size === "xl" ? "text-base px-8" : "text-sm px-6",
           faceColor[color],
           pressed && !disabled ? "translate-y-2" : "translate-y-0",
