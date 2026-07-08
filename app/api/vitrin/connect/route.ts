@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { randomBytes } from "crypto";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess, apiError } from "@/lib/api-response";
+import { ApiErrorCode } from "@/lib/api-error-codes";
 
 export const POST = withRouteErrorBoundary(async (request: Request) => {
   // Get current user from session
@@ -14,10 +15,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
 
   // Check if already connected
   if (user.vitrin_connected) {
-    return NextResponse.json(
-      { error: "Vit-Rin account already connected" },
-      { status: 400 }
-    );
+    return apiError("Vit-Rin account already connected", ApiErrorCode.VITRIN_ALREADY_CONNECTED, 400);
   }
 
   // Generate mock OAuth code
@@ -27,13 +25,10 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
   // In a real implementation, you would store this code temporarily
   // For now, we'll just return the redirect URL
 
-  return NextResponse.json(
-    {
-      message: "OAuth flow initiated",
-      redirectUrl,
-      code: oauthCode, // For testing purposes
-    },
-    { status: 200 }
-  );
+  return apiSuccess({
+    message: "OAuth flow initiated",
+    redirectUrl,
+    code: oauthCode, // For testing purposes
+  });
 });
 

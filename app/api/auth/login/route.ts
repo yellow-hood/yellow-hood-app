@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
 import { findUser, verifyPassword, createSession } from "@/lib/db";
 import { randomBytes } from "crypto";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess, apiError } from "@/lib/api-response";
+import { ApiErrorCode } from "@/lib/api-error-codes";
 
 export const POST = withRouteErrorBoundary(async (request: Request) => {
   const body = await request.json();
@@ -9,10 +10,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
 
   // Validate input
   if (!email || !password) {
-    return NextResponse.json(
-      { error: "Email and password are required" },
-      { status: 400 }
-    );
+    return apiError("Email and password are required", ApiErrorCode.VALIDATION_ERROR, 400);
   }
 
   // Find user (trim email to handle whitespace)
@@ -20,10 +18,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
   const user = await findUser(trimmedEmail);
   if (!user) {
     console.error("User not found for email:", trimmedEmail);
-    return NextResponse.json(
-      { error: "Invalid email or password" },
-      { status: 401 }
-    );
+    return apiError("Invalid email or password", ApiErrorCode.INVALID_CREDENTIALS, 401);
   }
 
   // Verify password
@@ -35,10 +30,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
       "user ID:",
       user.id
     );
-    return NextResponse.json(
-      { error: "Invalid email or password" },
-      { status: 401 }
-    );
+    return apiError("Invalid email or password", ApiErrorCode.INVALID_CREDENTIALS, 401);
   }
 
   // Generate session token
@@ -48,7 +40,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
   await createSession(user.id, token, 24); // 24 hours expiration
 
   // Create response with token and user
-  const response = NextResponse.json({ token, user }, { status: 200 });
+  const response = apiSuccess({ token, user });
 
   // Set auth token cookie (24 hours expiration)
   response.cookies.set("auth_token", token, {

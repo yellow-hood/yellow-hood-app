@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { updateUser } from "@/lib/db";
 import { randomBytes } from "crypto";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess, apiError } from "@/lib/api-response";
+import { ApiErrorCode } from "@/lib/api-error-codes";
 
 export const POST = withRouteErrorBoundary(async (request: Request) => {
   // Get current user from session
@@ -19,10 +20,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
 
   // Validate input
   if (!code || typeof code !== "string") {
-    return NextResponse.json(
-      { error: "OAuth code is required" },
-      { status: 400 }
-    );
+    return apiError("OAuth code is required", ApiErrorCode.VALIDATION_ERROR, 400);
   }
 
   // Simulate exchanging code for vitrin_user_id
@@ -37,18 +35,12 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
   });
 
   if (!updatedUser) {
-    return NextResponse.json(
-      { error: "Failed to update user" },
-      { status: 500 }
-    );
+    return apiError("Failed to update user", ApiErrorCode.UPDATE_FAILED, 500);
   }
 
-  return NextResponse.json(
-    {
-      message: "Vit-Rin account connected successfully",
-      user: updatedUser,
-    },
-    { status: 200 }
-  );
+  return apiSuccess({
+    message: "Vit-Rin account connected successfully",
+    user: updatedUser,
+  });
 });
 

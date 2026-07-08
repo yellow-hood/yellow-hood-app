@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
 import { findUserByVitrinId, updateBalance, addTransaction } from "@/lib/db";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess, apiError } from "@/lib/api-response";
+import { ApiErrorCode } from "@/lib/api-error-codes";
 
 export const POST = withRouteErrorBoundary(async (request: Request) => {
   // Parse request body
@@ -9,36 +10,24 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
 
   // Validate input
   if (!user_id || typeof user_id !== "string") {
-    return NextResponse.json(
-      { error: "user_id is required" },
-      { status: 400 }
-    );
+    return apiError("user_id is required", ApiErrorCode.VALIDATION_ERROR, 400);
   }
 
   if (!amount || typeof amount !== "number" || amount <= 0) {
-    return NextResponse.json(
-      { error: "Valid amount is required" },
-      { status: 400 }
-    );
+    return apiError("Valid amount is required", ApiErrorCode.VALIDATION_ERROR, 400);
   }
 
   // Find user by vitrin_user_id (webhook sends vitrin_user_id)
   const user = await findUserByVitrinId(user_id);
 
   if (!user) {
-    return NextResponse.json(
-      { error: "User not found" },
-      { status: 404 }
-    );
+    return apiError("User not found", ApiErrorCode.USER_NOT_FOUND, 404);
   }
 
   // Credit balance
   const wallet = await updateBalance(user.id, amount);
   if (!wallet) {
-    return NextResponse.json(
-      { error: "Failed to update wallet" },
-      { status: 500 }
-    );
+    return apiError("Failed to update wallet", ApiErrorCode.UPDATE_FAILED, 500);
   }
 
   // Record reward transaction
@@ -49,13 +38,10 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
     source: source || "vitrin_reward",
   });
 
-  return NextResponse.json(
-    {
-      message: "Reward processed successfully",
-      userId: user.id,
-      newBalance: wallet.balance,
-    },
-    { status: 200 }
-  );
+  return apiSuccess({
+    message: "Reward processed successfully",
+    userId: user.id,
+    newBalance: wallet.balance,
+  });
 });
 

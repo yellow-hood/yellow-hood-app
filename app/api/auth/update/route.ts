@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { updateUser } from "@/lib/db";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess, apiError } from "@/lib/api-response";
+import { ApiErrorCode } from "@/lib/api-error-codes";
 
 export const PUT = withRouteErrorBoundary(async (request: Request) => {
   // Get current user from session
@@ -26,12 +27,9 @@ export const PUT = withRouteErrorBoundary(async (request: Request) => {
   const updatedUser = await updateUser(user.id, updates);
 
   if (!updatedUser) {
-    return NextResponse.json(
-      { error: "Failed to update user" },
-      { status: 500 }
-    );
+    return apiError("Failed to update user", ApiErrorCode.UPDATE_FAILED, 500);
   }
 
-  return NextResponse.json({ user: updatedUser }, { status: 200 });
+  return apiSuccess({ user: updatedUser });
 });
 

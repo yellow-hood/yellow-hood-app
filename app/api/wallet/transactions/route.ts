@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { getTransactions } from "@/lib/db";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess } from "@/lib/api-response";
 
 export const GET = withRouteErrorBoundary(async (request: Request) => {
   // Get current user from session
@@ -15,9 +15,6 @@ export const GET = withRouteErrorBoundary(async (request: Request) => {
   // Get transactions for user (already sorted by date desc)
   const transactions = await getTransactions(user.id);
 
-  return NextResponse.json(
-    { transactions },
-    { status: 200 }
-  );
+  return apiSuccess({ transactions });
 });
 
