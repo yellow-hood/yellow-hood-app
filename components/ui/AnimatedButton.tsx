@@ -51,6 +51,7 @@ export function AnimatedButton({
         size === "xl" ? "h-14" : "h-12",
         fullWidth && "w-full",
         disabled && "cursor-not-allowed opacity-40",
+        className,
       )}
     >
       {/* static wall layer, riser is 8px (corrected per Design System doc) */}
@@ -78,7 +79,6 @@ export function AnimatedButton({
           size === "xl" ? "text-base px-8" : "text-sm px-6",
           faceColor[color],
           pressed && !disabled ? "translate-y-2" : "translate-y-0",
-          className,
         )}
         style={{
           transitionProperty: "transform",
