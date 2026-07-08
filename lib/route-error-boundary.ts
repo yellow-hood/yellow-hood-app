@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { apiError } from "./api-response";
+import { ApiErrorCode } from "./api-error-codes";
 
 type RouteHandler = (request: Request) => Promise<Response>;
 
@@ -19,10 +20,7 @@ export function withRouteErrorBoundary(
       }
 
       console.error("[route-error-boundary]", error);
-      return NextResponse.json(
-        { error: "Internal server error" },
-        { status: 500 }
-      );
+      return apiError("Internal server error", ApiErrorCode.INTERNAL_ERROR, 500);
     }
   };
 }

@@ -1,14 +1,13 @@
 import { findSession, findUser } from "./db";
+import { apiError } from "./api-response";
+import { ApiErrorCode } from "./api-error-codes";
 
 export async function getCurrentUser(request: Request): Promise<{ user: any; error?: never } | { user?: never; error: Response }> {
   const authHeader = request.headers.get("authorization");
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return {
-      error: new Response(
-        JSON.stringify({ error: "Authorization token required" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      ),
+      error: apiError("Authorization token required", ApiErrorCode.UNAUTHORIZED, 401),
     };
   }
 
@@ -17,10 +16,7 @@ export async function getCurrentUser(request: Request): Promise<{ user: any; err
 
   if (!session) {
     return {
-      error: new Response(
-        JSON.stringify({ error: "Invalid or expired session" }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
-      ),
+      error: apiError("Invalid or expired session", ApiErrorCode.SESSION_EXPIRED, 401),
     };
   }
 
@@ -28,10 +24,7 @@ export async function getCurrentUser(request: Request): Promise<{ user: any; err
 
   if (!user) {
     return {
-      error: new Response(
-        JSON.stringify({ error: "User not found" }),
-        { status: 404, headers: { "Content-Type": "application/json" } }
-      ),
+      error: apiError("User not found", ApiErrorCode.USER_NOT_FOUND, 404),
     };
   }
 

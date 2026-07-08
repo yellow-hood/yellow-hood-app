@@ -2,8 +2,8 @@
   📁 File location: yellow-hood-app/docs/system-contracts.md
   📄 Notion page: https://www.notion.so/steering-agency/System-Contract-3493cf957a688058a8a6e6801f25e6d6
 
-  Notion last updated: 2026-06-28
-  Prompt last run: —
+  Notion last updated: 2026-07-08
+  Prompt last run: 2026-07-08
 
   To sync this file with Notion, use the Sync Prompt on the Notion page.
 -->
@@ -16,9 +16,9 @@ This document defines non-implementational rules that govern how the Yellow Hood
 
 These are NOT features. These are NOT tasks. They are system-level constraints that every engineer must follow when writing code for this project.
 
-When backend behavior, DB flow, error handling, or route rules change — **this document must be updated first.**
+When backend behavior, DB flow, error handling, or route rules change — this document must be updated first.
 
-> Single source of truth for system behavior rules. Lives at `/docs/system-contracts.md`.
+> This file lives at `/docs/system-contracts.md` in the `yellow-hood-app` repository and is the single source of truth for system behavior rules.
 
 ---
 
@@ -36,26 +36,25 @@ Error handling is strictly layered — each layer has exactly one responsibility
 
 | Layer | Responsibility |
 |---|---|
-| DB Layer | Execute and throw naturally — no swallowing |
-| Service Layer | Pass-through only — no try/catch unless explicit not-found |
-| Route Layer | ONLY error boundary — catches everything, returns normalized response |
+| `lib/db.ts` (DB + service, combined — this codebase has no separate service layer) | Calls Prisma directly and returns typed results, or `undefined`/`null` for not-found. No try/catch — errors propagate naturally. |
+| Route Layer | ONLY error boundary — catches everything, returns normalized response via `apiSuccess`/`apiError` |
 
 ### Implementation
 
 All routes must wrap their handler with `withRouteErrorBoundary`.
 
-```ts
-// ✅ Correct
+```typescript
+// ✅ Correct — actual current pattern, used by all 12 routes
 export const GET = withRouteErrorBoundary(async (req) => {
-  const data = await userService.getUser(id)
-  return NextResponse.json(data)
+  const wallet = await getWallet(userId)
+  return apiSuccess({ balance: wallet.balance })
 })
 
 // ❌ Forbidden
 export const GET = async (req) => {
   try {
-    const data = await userService.getUser(id)
-    return NextResponse.json(data)
+    const wallet = await getWallet(userId)
+    return NextResponse.json({ balance: wallet.balance })
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 500 })
   }
@@ -84,6 +83,12 @@ export const GET = async (req) => {
 - Runtime failure on actual DB usage (query time)
 - Not-found returned as a valid non-error state
 
+### Current implementation status
+
+`lib/prisma.ts` caches its lazily-constructed `PrismaClient` on `globalThis` identically in development and production — exactly one client (and one underlying connection pool) exists per process lifetime, with no `NODE_ENV` branch that would recreate the client per call. Construction itself is wrapped in try/catch: a failure is logged (`console.error("[lib/prisma] Failed to initialize Prisma client:", error)`) and rethrown, still only ever triggered lazily on first property access — never at module import.
+
+Env var validation (`instrumentation.ts`): on Node.js server start (`process.env.NEXT_RUNTIME === "nodejs"`), checks that `DATABASE_URL` is set. If missing, logs `console.warn("[instrumentation] DATABASE_URL is not set — DB-dependent routes will fail until it is configured.")`. Never `throw`s and never calls `process.exit()` — a missing env var only produces a warning, boot continues. No other env vars are currently validated here.
+
 ### Forbidden
 
 - `throw` inside Prisma client instantiation
@@ -103,20 +108,19 @@ Every log must include:
 - `message` — the error message if it exists
 - `context` — relevant identifiers (userId, route, etc.) where available
 
-### Implementation
+### Current implementation status
 
-```ts
-logger.error({
-  source: 'userService.getUser',
-  message: error.message,
-  context: { userId }
-})
-```
+There is no `logger` module in the codebase — logging is done with plain `console.error`/`console.warn` calls, and not every error path logs:
+
+- `lib/route-error-boundary.ts`'s catch-all logs every uncaught exception as `console.error("[route-error-boundary]", error)` before returning the 500 response.
+- `lib/prisma.ts` logs Prisma client construction failures; `lib/db.ts` logs `checkDbConnection()` failures (`"[lib/db] DB connectivity check failed:"`) and a few password-verification edge cases.
+- `instrumentation.ts` warns (does not error) on a missing `DATABASE_URL`.
+- Most validation/not-found error paths (e.g. "Wallet not found", "Insufficient balance") return their error response directly with no log call at all.
+- No call site logs a structured `{ source, message, context }` object — every call passes a plain string plus loose extra arguments.
 
 ### Forbidden
 
 - Empty catch blocks
-- `console.log` in production paths (use the logger module)
 - Logging without source context
 - Swallowing an error after logging it (must still re-throw or return error response)
 
@@ -132,30 +136,43 @@ logger.error({
 
 Applies to all routes under `/app/api/**`
 
+### Current implementation status
+
+All 12 route files (the 11 pre-existing routes plus `/api/health`) use `withRouteErrorBoundary` — fully compliant, no exceptions found.
+
+### `/api/health`
+
+`app/api/health/route.ts` exists. It exports `export const dynamic = "force-dynamic"` so it is evaluated fresh on every request — never cached or computed at build time (this was a deliberate fix: an earlier version was statically pre-rendered and would have frozen whatever DB/env state existed at build time forever). On each `GET`, it checks `DATABASE_URL` presence and calls `checkDbConnection()` (a lightweight `prisma.$queryRaw` `SELECT 1` in `lib/db.ts`). When both pass it returns `apiSuccess` with `status: "ok"` and the checks object, at HTTP 200. When either fails it returns `apiError` with message `"Service degraded"`, code `"DEGRADED"`, status 503, plus the same checks object — a genuinely derived, on-demand runtime check with no boot dependency.
+
 ---
 
 ## Contract 5: API Response Format
 
 ### Rule
 
-All API responses must follow a consistent shape.
+All API responses must follow a consistent shape, produced by the shared `apiSuccess`/`apiError` helpers (`lib/api-response.ts`) — no route builds its own ad-hoc `NextResponse.json` body directly anymore.
 
 ### Success shape
 
+`apiSuccess(data, status)` spreads the caller's own data fields (which vary per route — e.g. `{token,user}` for login, `{balance}` for wallet/balance, `{games}` for games/list) and adds one field on top:
+
 ```json
 {
-  "data": { ... }
+  "...routeSpecificFields": "...",
+  "success": true
 }
 ```
 
-### Error shape (auto-produced by withRouteErrorBoundary)
+### Error shape (produced by `apiError`, including `withRouteErrorBoundary`'s default catch-all)
+
+Uniform across every route — `error` is always kept as a plain string (not nested) for backward compatibility with existing frontend code that reads it as a string:
 
 ```json
 {
-  "error": {
-    "message": "Human-readable message",
-    "code": "ERROR_CODE"
-  }
+  "error": "Human-readable message",
+  "message": "Human-readable message",
+  "code": "ERROR_CODE",
+  "success": false
 }
 ```
 
@@ -174,10 +191,9 @@ All API responses must follow a consistent shape.
 
 ### Forbidden
 
-- Returning `{ success: false }` as the error structure
 - Returning raw error objects or stack traces to the client
 - Using 200 for error responses
-- Inconsistent shapes between routes
+- Inconsistent envelope shapes between routes (the `success`/`error`/`message`/`code` envelope must stay uniform; per-route data fields naturally differ by domain)
 
 ---
 
@@ -185,21 +201,39 @@ All API responses must follow a consistent shape.
 
 ### Rule
 
-- Session is managed server-side using the established auth library
+- Session is managed server-side via a custom bearer-token scheme (`lib/auth.ts`) — not a third-party auth library, not cookie-based sessions
 - Session must be validated at the route level before any DB query
 - User ID is extracted from the session — never from the request body or query params
 
 ### Implementation
 
-```ts
-const session = await getServerSession()
-if (!session?.user?.id) {
-  return NextResponse.json(
-    { error: { message: 'Unauthorized', code: 'UNAUTHORIZED' } },
-    { status: 401 }
-  )
+Actual current code, `lib/auth.ts`'s `getCurrentUser(request)` — used at the top of every protected route:
+
+```typescript
+const authHeader = request.headers.get("authorization");
+if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  return { error: apiError("Authorization token required", ApiErrorCode.UNAUTHORIZED, 401) };
 }
-const userId = session.user.id
+const token = authHeader.substring(7);
+const session = await findSession(token); // custom Session table, not a cookie/JWT session
+if (!session) {
+  return { error: apiError("Invalid or expired session", ApiErrorCode.SESSION_EXPIRED, 401) };
+}
+const user = await findUser(undefined, session.user_id);
+if (!user) {
+  return { error: apiError("User not found", ApiErrorCode.USER_NOT_FOUND, 404) };
+}
+return { user };
+```
+
+Route usage:
+
+```typescript
+const authResult = await getCurrentUser(request);
+if (authResult.error) {
+  return authResult.error;
+}
+const { user } = authResult; // user.id used for all subsequent DB calls
 ```
 
 ### Auth States
@@ -239,10 +273,10 @@ Client request
 |---|---|
 | User connects VIT-RIN | Token received via OAuth, stored server-side |
 | Each request needing VIT-RIN | Token retrieved from server-side storage |
-| Token expires | Silent refresh attempt; if fails → 401 with `VITRIN_SESSION_EXPIRED` |
+| Token expires | Silent refresh attempt; if fails → return 401 with code `VITRIN_SESSION_EXPIRED` |
 | User disconnects VIT-RIN | Token deleted from server-side storage |
 
-### VIT-RIN Error Codes
+### Error Codes (VIT-RIN specific)
 
 | Code | Meaning |
 |---|---|
@@ -294,7 +328,7 @@ Avatar data (outfit, color, accessories, gender) is stored in PostgreSQL via Pri
 ### Rules
 
 - Avatar config is validated server-side before saving
-- Unknown layer keys are rejected with 400
+- Unknown layer keys are rejected (400)
 - Avatar data is passed to the Godot character iframe via a signed read-only token — never as raw JSON in URL params
 
 ### Forbidden
@@ -313,7 +347,7 @@ Scenarios that must pass before any deploy that touches DB or error handling:
 |---|---|
 | DB is offline at server start | Server starts normally, no crash |
 | DB goes offline mid-request | Route returns 500, error is logged, process continues |
-| DB returns unexpected null | Service returns 404, no crash |
+| DB returns unexpected null | Service returns not-found (404), no crash |
 | VIT-RIN API is unreachable | Route returns 503 with `VITRIN_API_ERROR`, logged |
 | Auth session is missing | Route returns 401 with `UNAUTHORIZED` |
 | Avatar POST with invalid body | Route returns 400 with validation message |
@@ -324,11 +358,6 @@ Scenarios that must pass before any deploy that touches DB or error handling:
 ## Ownership
 
 - Contracts define rules ONLY
-- Implementation lives in Tasks and Epics (Updates board in Notion)
-- This document must be updated when any of the following change:
-  - DB flow or Prisma behavior
-  - Error handling strategy
-  - Auth session rules
-  - VIT-RIN integration behavior
-  - API response shape
-  - Avatar data schema
+- Implementation lives in Tasks and Epics (Updates board)
+- This document must be updated when any of the following change: DB flow, error handling strategy, auth rules, VIT-RIN integration behavior, API response shape
+- The `/docs/system-contracts.md` file in the repo must stay in sync with this page
