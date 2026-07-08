@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@qpub/qui";
+import { CardContent, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@qpub/qui";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { History } from "lucide-react";
 import { useWalletStore } from "@/store/useWalletStore";

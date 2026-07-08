@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, Select, SelectValue } from "@qpub/qui";
+import { CardContent, Select, SelectValue } from "@qpub/qui";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { SelectTrigger, SelectContent, SelectItem } from "@/components/ui/Select";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -53,7 +54,7 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Settings</h1>
+      <h1 className="text-7xl font-black">Settings</h1>
 
       <Card>
         <CardContent className="p-6">

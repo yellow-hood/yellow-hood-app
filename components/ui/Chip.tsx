@@ -55,6 +55,13 @@ export function Chip({
       variant={badgeVariant}
       size={size}
       className={cn(
+        // Border-radius is pinned to rounded-medium (12px) regardless of size —
+        // qui's own Badge renders rounded-md (6px) with no doc-matching token.
+        // The `!` important modifier forces this to win for the same reason as
+        // components/ui/Input.tsx and components/ui/Select.tsx: tailwind-merge
+        // doesn't recognize this app's custom radius keys as conflicting with
+        // qui's built-in radius suffixes.
+        "!rounded-medium",
         isDisabled && "pointer-events-none opacity-40",
         onClose && "pr-1",
         className,

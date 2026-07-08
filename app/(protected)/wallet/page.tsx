@@ -9,7 +9,7 @@ export default function WalletPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-foreground">Wallet</h1>
+      <h1 className="text-7xl font-black text-foreground">Wallet</h1>
       {!user?.vitrin_connected ? (
         <ConnectWalletCard />
       ) : (

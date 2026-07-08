@@ -1,7 +1,8 @@
 "use client";
 
-import { Card, CardContent } from "@qpub/qui";
+import { CardContent } from "@qpub/qui";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import Image from "next/image";
 import { Play, Gamepad2 } from "lucide-react";
 import type { Game } from "@/types";

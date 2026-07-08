@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardContent } from "@qpub/qui";
+import { CardHeader, CardContent } from "@qpub/qui";
+import { Card } from "@/components/ui/Card";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Input } from "@/components/ui/Input";
 import { UserPlus } from "lucide-react";
@@ -37,7 +38,7 @@ export default function RegisterPage() {
           <div className="flex items-center justify-center w-16 h-16 mx-auto mb-2 rounded-full bg-primary/20">
             <UserPlus className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold text-center">Create Account</h1>
+          <h1 className="text-7xl font-black text-center">Create Account</h1>
           <p className="text-sm text-default-500 text-center">
             Enter your details to create an account.
           </p>
@@ -79,7 +80,7 @@ export default function RegisterPage() {
             <AnimatedButton
               type="submit"
               color="primary"
-              size="lg"
+              size="xl"
               isLoading={isLoading}
               className="mt-2"
               fullWidth
