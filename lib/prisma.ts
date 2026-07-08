@@ -6,18 +6,22 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 const createPrismaClient = (): PrismaClient => {
-  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
-  return new PrismaClient({
-    adapter,
-    log:
-      process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-  });
+  try {
+    const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+    return new PrismaClient({
+      adapter,
+      log:
+        process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+    });
+  } catch (error) {
+    console.error("[lib/prisma] Failed to initialize Prisma client:", error);
+    throw error;
+  }
 };
 
+// Cache the client identically in dev and prod so exactly one PrismaClient
+// (and one underlying pg connection pool) exists per process lifetime.
 const getPrismaClient = (): PrismaClient => {
-  if (process.env.NODE_ENV === "production") {
-    return createPrismaClient();
-  }
   if (!globalForPrisma.prisma) {
     globalForPrisma.prisma = createPrismaClient();
   }

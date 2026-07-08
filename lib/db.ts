@@ -1,3 +1,10 @@
+// Prisma usage boundary:
+// - Only this file and lib/prisma.ts may import `prisma`/`PrismaClient` directly.
+// - All other code (app/api/** routes, services/, store/, components/) must call
+//   the functions exported from this file instead of importing prisma directly.
+// - No raw Prisma queries or raw SQL in route handlers — especially auth, session,
+//   and wallet routes, which must always go through this data-access layer.
+
 import type { User, Wallet, Session, Transaction } from "@/types";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
