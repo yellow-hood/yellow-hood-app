@@ -9,6 +9,17 @@ import type { User, Wallet, Session, Transaction } from "@/types";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 
+// Health check
+export async function checkDbConnection(): Promise<boolean> {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return true;
+  } catch (error) {
+    console.error("[lib/db] DB connectivity check failed:", error);
+    return false;
+  }
+}
+
 // User functions
 export async function findUser(email?: string, id?: string): Promise<User | undefined> {
   if (id) {
