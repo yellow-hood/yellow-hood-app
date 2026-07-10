@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { getWallet } from "@/lib/db";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess, apiError } from "@/lib/api-response";
+import { ApiErrorCode } from "@/lib/api-error-codes";
 
 export const GET = withRouteErrorBoundary(async (request: Request) => {
   // Get current user from session
@@ -16,15 +17,9 @@ export const GET = withRouteErrorBoundary(async (request: Request) => {
   const wallet = await getWallet(user.id);
 
   if (!wallet) {
-    return NextResponse.json(
-      { error: "Wallet not found" },
-      { status: 404 }
-    );
+    return apiError("Wallet not found", ApiErrorCode.WALLET_NOT_FOUND, 404);
   }
 
-  return NextResponse.json(
-    { balance: wallet.balance },
-    { status: 200 }
-  );
+  return apiSuccess({ balance: wallet.balance });
 });
 

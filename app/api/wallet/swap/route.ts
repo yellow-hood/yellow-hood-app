@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { getWallet, updateBalance, addTransaction } from "@/lib/db";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess, apiError } from "@/lib/api-response";
+import { ApiErrorCode } from "@/lib/api-error-codes";
 
 // Simulate external Vit-Rin API call
 async function simulateVitrinSwap(
@@ -35,10 +36,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
 
   // Check if user is vitrin_connected
   if (!user.vitrin_connected) {
-    return NextResponse.json(
-      { error: "Vit-Rin account not connected" },
-      { status: 403 }
-    );
+    return apiError("Vit-Rin account not connected", ApiErrorCode.VITRIN_NOT_CONNECTED, 403);
   }
 
   // Parse request body
@@ -47,36 +45,24 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
 
   // Validate input
   if (!amount || typeof amount !== "number" || amount <= 0) {
-    return NextResponse.json(
-      { error: "Valid amount is required" },
-      { status: 400 }
-    );
+    return apiError("Valid amount is required", ApiErrorCode.VALIDATION_ERROR, 400);
   }
 
   // Get wallet
   const wallet = await getWallet(user.id);
   if (!wallet) {
-    return NextResponse.json(
-      { error: "Wallet not found" },
-      { status: 404 }
-    );
+    return apiError("Wallet not found", ApiErrorCode.WALLET_NOT_FOUND, 404);
   }
 
   // Check if user has enough balance
   if (wallet.balance < amount) {
-    return NextResponse.json(
-      { error: "Insufficient balance" },
-      { status: 400 }
-    );
+    return apiError("Insufficient balance", ApiErrorCode.INSUFFICIENT_BALANCE, 400);
   }
 
   // ATOMIC TRANSACTION: Debit Y-COIN immediately
   const debitResult = await updateBalance(user.id, -amount);
   if (!debitResult) {
-    return NextResponse.json(
-      { error: "Failed to update balance" },
-      { status: 500 }
-    );
+    return apiError("Failed to update balance", ApiErrorCode.UPDATE_FAILED, 500);
   }
 
   // Simulate external API call to Vit-Rin
@@ -86,10 +72,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
     // ROLLBACK: Credit Y-COIN back on failure
     await updateBalance(user.id, amount);
 
-    return NextResponse.json(
-      { error: vitrinResult.error || "Swap failed" },
-      { status: 500 }
-    );
+    return apiError(vitrinResult.error || "Swap failed", ApiErrorCode.SWAP_FAILED, 500);
   }
 
   // SUCCESS: Record swap transaction
@@ -100,12 +83,9 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
     source: "vitrin_swap",
   });
 
-  return NextResponse.json(
-    {
-      message: "Swap completed successfully",
-      newBalance: debitResult.balance,
-    },
-    { status: 200 }
-  );
+  return apiSuccess({
+    message: "Swap completed successfully",
+    newBalance: debitResult.balance,
+  });
 });
 

@@ -28,7 +28,7 @@ export default function GamesPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-foreground">Games</h1>
+        <h1 className="text-7xl font-black text-foreground">Games</h1>
         <div className="text-center py-12 text-default-500">Loading…</div>
       </div>
     );
@@ -36,7 +36,7 @@ export default function GamesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-foreground">Games</h1>
+      <h1 className="text-7xl font-black text-foreground">Games</h1>
       {games.length === 0 ? (
         <div className="text-center py-12 text-default-500">
           No games yet.

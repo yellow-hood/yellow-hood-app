@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@qpub/qui";
+import { CardContent } from "@qpub/qui";
+import { Card } from "@/components/ui/Card";
 import { Coins, Gamepad2 } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useWalletStore } from "@/store/useWalletStore";
@@ -35,7 +36,7 @@ export default function HomePage() {
     <div className="space-y-6">
       <Card>
         <CardContent className="p-6">
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-7xl font-black">
             Hello, {user?.username || "User"}
           </h1>
         </CardContent>

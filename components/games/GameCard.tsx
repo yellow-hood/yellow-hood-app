@@ -1,7 +1,8 @@
 "use client";
 
-import { Card, CardContent } from "@qpub/qui";
-import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import { CardContent } from "@qpub/qui";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import Image from "next/image";
 import { Play, Gamepad2 } from "lucide-react";
 import type { Game } from "@/types";
@@ -35,14 +36,18 @@ export default function GameCard({ game }: GameCardProps) {
           </div>
         </div>
 
-        <AnimatedButton
+        <Button
           color="primary"
+          variant="solid"
+          size="lg"
           onClick={handlePlay}
-          fullWidth
-          startContent={<Play className="w-4 h-4" />}
+          className="w-full"
         >
-          Play Now
-        </AnimatedButton>
+          <span className="flex items-center gap-2">
+            <Play className="w-4 h-4" />
+            Play Now
+          </span>
+        </Button>
       </CardContent>
     </Card>
   );

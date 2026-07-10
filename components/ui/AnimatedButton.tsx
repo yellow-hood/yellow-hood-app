@@ -46,12 +46,13 @@ export function AnimatedButton({
         size === "xl" ? "h-14" : "h-12",
         fullWidth && "w-full",
         disabled && "cursor-not-allowed opacity-40",
+        className,
       )}
     >
       {/* static wall layer, riser is 8px (corrected per Design System doc) */}
       <div
         className={cn(
-          "absolute inset-x-0 bottom-0 top-2 rounded-medium",
+          "absolute inset-x-0 bottom-0 top-2 rounded-large",
           wallColor[color],
         )}
       />
@@ -71,29 +72,18 @@ export function AnimatedButton({
           // 8px strip visible at rest (lg: 48px container -> 40px face; xl: 56px
           // container -> 48px face). Pressing translates the face down by that
           // same 8px so it sits flush with the wall, per the two-layer press spec.
-<<<<<<< Updated upstream
-          "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-medium font-semibold",
-          size === "xl" ? "text-base px-8" : "text-sm px-6",
-          faceColor[color],
-=======
-          "relative z-10 flex h-[calc(100%-8px)] w-full font-semibold",
-          size === "xl" ? "px-8" : "px-6",
+          "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-large font-semibold",
+          size === "xl" ? "px-8 text-base" : "px-6 text-sm",
           color === "default" && "bg-default-200 text-foreground dark:bg-default-700",
-          // Qui's Button ships hover/active/disabled treatments of its own (alpha-dimmed
-          // hover, active:scale, disabled:opacity-50) that this component never had and
-          // that visually fight the two-layer wall/press illusion -- these three
-          // overrides cancel them via the same tailwind-merge same-modifier-chain
-          // mechanism the size/padding/font-weight overrides above already rely on, so
-          // only AnimatedButton's own hover-less rest look, translateY press, and the
-          // wrapper's single opacity-40 disabled dim apply.
+          
+          // Qui's Button overrides to cancel visual conflicts with the wall/press illusion
           color === "primary" && "hover:bg-primary",
           color === "secondary" && "hover:bg-secondary",
           color === "default" && "hover:bg-default-200 dark:hover:bg-default-700",
           "motion-safe:active:scale-100",
           "disabled:opacity-100",
->>>>>>> Stashed changes
+          
           pressed && !disabled ? "translate-y-2" : "translate-y-0",
-          className,
         )}
         style={{
           transitionProperty: "transform",

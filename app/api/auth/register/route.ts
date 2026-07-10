@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
 import { findUser, createUser } from "@/lib/db";
 import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess, apiError } from "@/lib/api-response";
+import { ApiErrorCode } from "@/lib/api-error-codes";
 
 export const POST = withRouteErrorBoundary(async (request: Request) => {
   const body = await request.json();
@@ -8,19 +9,13 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
 
   // Validate input
   if (!email || !username || !password) {
-    return NextResponse.json(
-      { error: "Email, username, and password are required" },
-      { status: 400 }
-    );
+    return apiError("Email, username, and password are required", ApiErrorCode.VALIDATION_ERROR, 400);
   }
 
   // Check if user already exists
   const existingUser = await findUser(email);
   if (existingUser) {
-    return NextResponse.json(
-      { error: "User with this email already exists" },
-      { status: 409 }
-    );
+    return apiError("User with this email already exists", ApiErrorCode.USER_EXISTS, 409);
   }
 
   // Create new user
@@ -35,7 +30,7 @@ export const POST = withRouteErrorBoundary(async (request: Request) => {
     password
   );
 
-  // Return user object (without password)
-  return NextResponse.json(newUser, { status: 201 });
+  // Return user object (without password) — kept flat at the top level, matching legacy shape
+  return apiSuccess(newUser, 201);
 });
 

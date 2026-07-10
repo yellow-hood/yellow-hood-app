@@ -1,0 +1,21 @@
+// Stable, machine-readable error codes for apiError()'s `code` argument.
+// Add new codes here rather than inlining fresh strings at each call site.
+export const ApiErrorCode = {
+  VALIDATION_ERROR: "VALIDATION_ERROR",
+  INVALID_CREDENTIALS: "INVALID_CREDENTIALS",
+  USER_EXISTS: "USER_EXISTS",
+  UNAUTHORIZED: "UNAUTHORIZED",
+  SESSION_EXPIRED: "SESSION_EXPIRED",
+  USER_NOT_FOUND: "USER_NOT_FOUND",
+  SESSION_NOT_FOUND: "SESSION_NOT_FOUND",
+  UPDATE_FAILED: "UPDATE_FAILED",
+  VITRIN_ALREADY_CONNECTED: "VITRIN_ALREADY_CONNECTED",
+  VITRIN_NOT_CONNECTED: "VITRIN_NOT_CONNECTED",
+  WALLET_NOT_FOUND: "WALLET_NOT_FOUND",
+  INSUFFICIENT_BALANCE: "INSUFFICIENT_BALANCE",
+  SWAP_FAILED: "SWAP_FAILED",
+  INTERNAL_ERROR: "INTERNAL_ERROR",
+  DEGRADED: "DEGRADED",
+} as const;
+
+export type ApiErrorCode = (typeof ApiErrorCode)[keyof typeof ApiErrorCode];

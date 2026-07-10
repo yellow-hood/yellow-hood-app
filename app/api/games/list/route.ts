@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
 import type { Game } from "@/types";
+import { withRouteErrorBoundary } from "@/lib/route-error-boundary";
+import { apiSuccess } from "@/lib/api-response";
 
 // Static game data
 const games: Game[] = [
@@ -53,14 +54,6 @@ const games: Game[] = [
   },
 ];
 
-export async function GET(request: Request) {
-  try {
-    return NextResponse.json({ games }, { status: 200 });
-  } catch (error) {
-    console.error("Error fetching games:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
+export const GET = withRouteErrorBoundary(async () => {
+  return apiSuccess({ games });
+});

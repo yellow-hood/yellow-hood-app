@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardContent } from "@qpub/qui";
+import { CardHeader, CardContent } from "@qpub/qui";
+import { Card } from "@/components/ui/Card";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Input } from "@/components/ui/Input";
 import { LogIn } from "lucide-react";
@@ -39,7 +40,7 @@ export default function LoginPage() {
           <div className="flex items-center justify-center w-16 h-16 mx-auto mb-2 rounded-full bg-primary/20">
             <LogIn className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold text-center">Sign In</h1>
+          <h1 className="text-7xl font-black text-center">Sign In</h1>
           <p className="text-sm text-default-500 text-center">
             Sign in with your email and password.
           </p>
@@ -72,7 +73,7 @@ export default function LoginPage() {
             <AnimatedButton
               type="submit"
               color="primary"
-              size="lg"
+              size="xl"
               isLoading={isLoading}
               className="mt-2"
               fullWidth
