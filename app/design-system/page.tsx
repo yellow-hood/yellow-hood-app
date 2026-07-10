@@ -3,7 +3,6 @@
 
 import * as React from "react";
 import {
-  Card,
   CardHeader,
   CardTitle,
   CardDescription,
@@ -27,6 +26,7 @@ import {
 import { useTheme } from "next-themes";
 import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { Input } from "@/components/ui/Input";
 import { OtpInput } from "@/components/ui/OtpInput";
@@ -909,7 +909,7 @@ export default function DesignSystemPage() {
                 />
                 <div className="grid gap-6 md:grid-cols-3">
                   <Card className="border border-default-200 dark:border-default-800 bg-background">
-                    <CardHeader>
+                    <CardHeader className="gap-2">
                       <CardTitle>Default</CardTitle>
                       <CardDescription>Use tokenized surfaces and spacing to separate card content.</CardDescription>
                     </CardHeader>
@@ -918,7 +918,7 @@ export default function DesignSystemPage() {
                     </CardContent>
                   </Card>
                   <Card className="border border-default-200 dark:border-default-800 bg-background ring-2 ring-primary/40 transition hover:ring-primary">
-                    <CardHeader>
+                    <CardHeader className="gap-2">
                       <CardTitle>Interactive</CardTitle>
                       <CardDescription>Interactive cards must support hover, focus, and pressed states.</CardDescription>
                     </CardHeader>
@@ -927,7 +927,7 @@ export default function DesignSystemPage() {
                     </CardContent>
                   </Card>
                   <Card className="border border-default-200 dark:border-default-800 bg-default-50 shadow-md dark:bg-default-900">
-                    <CardHeader>
+                    <CardHeader className="gap-2">
                       <CardTitle>Elevated</CardTitle>
                       <CardDescription>Use tokenized surfaces and spacing to separate card content.</CardDescription>
                     </CardHeader>
@@ -973,7 +973,7 @@ export default function DesignSystemPage() {
               <Separator className="bg-default-100" />
 
               <div className="grid gap-8 md:grid-cols-2">
-                <div className="space-y-6 rounded-xl bg-default-50 p-6 dark:bg-default-900">
+                <div className="space-y-6 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                   <p className="text-sm font-semibold text-foreground">Tabs (@qpub/qui)</p>
                   <Tabs defaultValue="activity" color="primary">
                     <TabsList>

@@ -63,6 +63,7 @@ export function AnimatedButton({
         color={color}
         size={size === "xl" ? "lg" : "md"}
         isDisabled={!!disabled}
+        disablePressTranslate
         onPointerDown={() => { if (!disabled) setPressed(true); }}
         onPointerUp={() => setPressed(false)}
         onPointerLeave={() => setPressed(false)}

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -7,9 +6,10 @@ import Navbar from "@/components/layout/Navbar";
 import BottomNav from "@/components/layout/BottomNav";
 import { Toaster } from "sonner";
 
-const nunito = Nunito({
-  subsets: ["latin"],
-  weight: ["300", "400", "600", "700", "900"],
+const nunito = localFont({
+  src: "../fonts/Nunito-Variable.ttf",
+  weight: "200 1000",
+  variable: "--font-nunito",
   display: "swap",
 });
 
@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${nunito.className} ${iranSansXV.variable}`}>
+      <body className={`${nunito.className} ${nunito.variable} ${iranSansXV.variable}`}>
         <Providers>
           <div className="min-h-screen bg-background text-foreground">
             <Navbar />
