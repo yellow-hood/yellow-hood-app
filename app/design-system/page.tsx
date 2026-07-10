@@ -34,8 +34,9 @@ import { SelectTrigger, SelectContent, SelectItem } from "@/components/ui/Select
 import { MoonLinearIcon, SunLinearIcon, SettingsLinearIcon } from "@/components/ui/icons";
 
 // Real control radius token (Yellow Hood Design System radius tokens, tailwind.config.ts).
-// AnimatedButton (components/ui/AnimatedButton.tsx) uses `rounded-medium` for both its
-// wall and face layers, so that's the real token for interactive controls on this page.
+// Used here for the Textarea, which has no components/ui wrapper of its own — Chip, Input,
+// Select, and Button sm are the app's other rounded-medium controls (see the Design System
+// doc's Border Radius table); AnimatedButton, Button md/lg, and Card use rounded-large.
 const CONTROL_RADIUS_CLASS = "rounded-medium";
 const DOC_CARD_CLASS =
   "mx-auto w-full border border-default-200 dark:border-default-800 bg-background/70 backdrop-blur";
@@ -197,10 +198,8 @@ const ALERT_TOKENS = [
   { color: "info", name: "Info" },
 ] as const;
 
-// Pixel values are measured from the rendered h-*/w-* classes below (32/40/56/64px),
-// not copied from the Design System doc — the doc says `lg` is 48px, but the real
-// rendered size is 56px (h-14), a genuine doc/code mismatch. `xl` isn't in the doc
-// at all; 64px (h-16) is what's actually implemented here.
+// Pixel values are measured live from the rendered h-*/w-* classes below (32/40/56/64px),
+// matching the Design System doc's Avatar sizing table.
 const AVATAR_SIZES = [
   { size: "sm", px: 32, avatarClass: "h-8 w-8", textClass: "text-xs", initials: "YH" },
   { size: "md", px: 40, avatarClass: "h-10 w-10", textClass: "text-sm", initials: "KM" },
@@ -290,9 +289,16 @@ export default function DesignSystemPage() {
               <Separator className="bg-default-100" />
               <TypographySample
                 label="H2 / Section title"
-                titleClass="text-2xl font-bold md:text-3xl"
+                titleClass="text-4xl font-extrabold"
                 titleText="The quick brown fox jumps over the lazy dog"
                 description="Use for major content groups and section starts."
+              />
+              <Separator className="bg-default-100" />
+              <TypographySample
+                label="Subtitle / Secondary heading"
+                titleClass="text-subtitle font-semibold text-foreground"
+                titleText="The quick brown fox jumps over the lazy dog"
+                description="Pairs with H1/H2 as a secondary heading."
               />
               <Separator className="bg-default-100" />
               <TypographySample
@@ -315,6 +321,44 @@ export default function DesignSystemPage() {
                 titleText="Email address"
                 description="Keep labels specific and use sentence case."
               />
+
+              <Separator className="bg-default-100" />
+
+              <div className="space-y-6">
+                <SubgroupHeader
+                  title="Text Button sizes"
+                  description="Not standalone headings — these tokens set the label text size/weight inside AnimatedButton and the qui Button primitive at each button size (see the Buttons section above for the live components)."
+                />
+                <div className="space-y-8">
+                  <TypographySample
+                    label="Text Button SM — 12px/16px"
+                    titleClass="text-xs font-semibold text-foreground"
+                    titleText="Continue"
+                    description="Button label text for Button `sm` (28px)."
+                  />
+                  <Separator className="bg-default-100" />
+                  <TypographySample
+                    label="Text Button MD — 14px/20px"
+                    titleClass="text-sm font-semibold text-foreground"
+                    titleText="Continue"
+                    description="Button label text for Button default/`md` (40px)."
+                  />
+                  <Separator className="bg-default-100" />
+                  <TypographySample
+                    label="Text Button LG — 16px/24px"
+                    titleClass="text-base font-medium text-foreground"
+                    titleText="Continue"
+                    description="Button label text for Button `lg` (48px) and AnimatedButton `lg` (48px)."
+                  />
+                  <Separator className="bg-default-100" />
+                  <TypographySample
+                    label="Text Button XL — 18px/28px"
+                    titleClass="text-lg font-medium text-foreground"
+                    titleText="Continue"
+                    description="Button label text for AnimatedButton `xl` (56px) — largest of the four, Animated-only."
+                  />
+                </div>
+              </div>
             </div>
           </DocCard>
           <UsageBlock
@@ -409,7 +453,7 @@ export default function DesignSystemPage() {
               <div className="space-y-6">
                 <SubgroupHeader
                   title="Radius tokens"
-                  description="Interactive controls (AnimatedButton, Chip, Input) share `rounded-medium`; larger surfaces can use `rounded-large`."
+                  description="Chip, Input, Select, and Button sm use `rounded-medium` (12px); AnimatedButton, Button md/lg, and Card use `rounded-large` (14px) — radius scales with a control's size/visual weight, not by component type alone."
                 />
                 <div className="space-y-4 text-xs">
                   {RADIUS_SWATCHES.map((item) => (
@@ -845,7 +889,7 @@ export default function DesignSystemPage() {
                 <SubgroupHeader title="Avatar (@qpub/qui)" description="Sizes and fallback initials for missing images." />
                 <div className="flex flex-wrap items-end gap-8">
                   {AVATAR_SIZES.map(({ size, px, avatarClass, textClass, initials }) => (
-                    <div key={size} className="space-y-2 text-center">
+                    <div key={size} className="flex flex-col items-center gap-2">
                       <Avatar className={avatarClass}>
                         <AvatarImage src={undefined} alt="" />
                         <AvatarFallback className={textClass}>{initials}</AvatarFallback>
@@ -974,7 +1018,7 @@ type SectionHeaderProps = { title: string; description: string };
 function SectionHeader({ title, description }: SectionHeaderProps) {
   return (
     <div className="space-y-3">
-      <h2 className="text-3xl font-bold tracking-tight">{title}</h2>
+      <h2 className="text-4xl font-extrabold tracking-tight">{title}</h2>
       <p className="max-w-3xl text-sm text-default-500">{description}</p>
     </div>
   );
@@ -983,7 +1027,7 @@ function SectionHeader({ title, description }: SectionHeaderProps) {
 function SubgroupHeader({ title, description }: { title: string; description: string }) {
   return (
     <div className="space-y-3">
-      <p className="text-xs font-label uppercase tracking-[0.08em] text-default-500">
+      <p className="text-xs font-label uppercase tracking-[0.08em] text-foreground">
         {title}
       </p>
       <p className="max-w-3xl text-sm text-default-500">{description}</p>
@@ -1149,7 +1193,7 @@ function RadiusRow({ name, token, className, highlight }: RadiusRowProps) {
 
   return (
     <div className="flex items-center gap-4">
-      <div ref={ref} className={`h-10 w-20 border border-default-200 dark:border-default-800 bg-default-100 ${className}`} />
+      <div ref={ref} className={`h-10 w-20 border border-default-200 dark:border-default-700 bg-default-100 dark:bg-default-800 ${className}`} />
       <div className="space-y-1 text-xs">
         <p className={highlight ? "font-semibold text-secondary" : "font-semibold text-foreground"}>{name}</p>
         <p className="font-mono text-default-500">{token} • {radius}</p>
