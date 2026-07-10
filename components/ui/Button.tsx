@@ -6,7 +6,14 @@ import { cn } from "@/lib/utils";
 
 type QuiButtonProps = React.ComponentProps<typeof QuiButton>;
 
-export function Button({ size, className, ...props }: QuiButtonProps) {
+type ButtonProps = QuiButtonProps & {
+  // Internal-only escape hatch, not part of the public API: skips this
+  // wrapper's default press-translate/scale override entirely, leaving the
+  // caller's own press styling uncontested (used by AnimatedButton).
+  disablePressTranslate?: boolean;
+};
+
+export function Button({ size, className, disablePressTranslate, ...props }: ButtonProps) {
   // @qpub/qui's default/md (no `size` prop, or explicit size="md") renders 36px
   // (h-9, or size-9 for icon-only buttons). The app wants that bumped to 40px
   // without touching sm (28px) or lg (48px) when explicitly requested. tailwind-merge
@@ -28,10 +35,20 @@ export function Button({ size, className, ...props }: QuiButtonProps) {
   // components/ui/Input.tsx and components/ui/Select.tsx).
   const radiusOverride = size === "sm" ? "!rounded-medium" : "!rounded-large";
 
+  // Replaces qui's default motion-safe:active:scale-[0.98] press feedback
+  // with a translateY(2px) shift of equivalent subtle intensity. scale-100
+  // is required alongside translate-y-[2px] to actually cancel qui's scale
+  // class — scale and translate are separate Tailwind transform utility
+  // groups, so tailwind-merge won't dedupe one against the other and both
+  // would otherwise apply together.
+  const pressOverride = disablePressTranslate
+    ? undefined
+    : "motion-safe:active:translate-y-[2px] motion-safe:active:scale-100";
+
   return (
     <QuiButton
       size={size}
-      className={cn(sizeOverride, radiusOverride, className)}
+      className={cn(sizeOverride, radiusOverride, pressOverride, className)}
       {...(props as QuiButtonProps)}
     />
   );
