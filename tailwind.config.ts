@@ -51,6 +51,7 @@ const config: Config = {
       },
       fontSize: {
         lead: ["1.25rem", { lineHeight: "1.6" }],
+        subtitle: ["1.5rem", { lineHeight: "2rem" }],
       },
       // Yellow Hood Design System radius tokens
       borderRadius: {

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Spinner } from "@qpub/qui";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 type AnimatedButtonColor = "primary" | "secondary" | "default";
@@ -21,12 +22,6 @@ const wallColor: Record<AnimatedButtonColor, string> = {
   primary: "bg-primary-600 dark:bg-primary-700",
   secondary: "bg-secondary-700 dark:bg-secondary-800",
   default: "bg-default-400 dark:bg-default-800",
-};
-
-const faceColor: Record<AnimatedButtonColor, string> = {
-  primary: "bg-primary text-primary-foreground",
-  secondary: "bg-secondary text-secondary-foreground",
-  default: "bg-default-200 text-foreground dark:bg-default-700",
 };
 
 export function AnimatedButton({
@@ -62,10 +57,12 @@ export function AnimatedButton({
         )}
       />
       {/* button face */}
-      <button
+      <Button
         type={type as "button" | "submit" | "reset"}
         {...props}
-        disabled={!!disabled}
+        color={color}
+        size={size === "xl" ? "lg" : "md"}
+        isDisabled={!!disabled}
         onPointerDown={() => { if (!disabled) setPressed(true); }}
         onPointerUp={() => setPressed(false)}
         onPointerLeave={() => setPressed(false)}
@@ -76,8 +73,16 @@ export function AnimatedButton({
           // container -> 48px face). Pressing translates the face down by that
           // same 8px so it sits flush with the wall, per the two-layer press spec.
           "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-large font-semibold",
-          size === "xl" ? "text-base px-8" : "text-sm px-6",
-          faceColor[color],
+          size === "xl" ? "px-8 text-base" : "px-6 text-sm",
+          color === "default" && "bg-default-200 text-foreground dark:bg-default-700",
+          
+          // Qui's Button overrides to cancel visual conflicts with the wall/press illusion
+          color === "primary" && "hover:bg-primary",
+          color === "secondary" && "hover:bg-secondary",
+          color === "default" && "hover:bg-default-200 dark:hover:bg-default-700",
+          "motion-safe:active:scale-100",
+          "disabled:opacity-100",
+          
           pressed && !disabled ? "translate-y-2" : "translate-y-0",
         )}
         style={{
@@ -94,7 +99,7 @@ export function AnimatedButton({
             {children}
           </>
         )}
-      </button>
+      </Button>
     </div>
   );
 }
