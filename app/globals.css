@@ -9,9 +9,9 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     /* Yellow Hood Design System tokens */
-    --primary: 0.7178 0.1572 66.80;
+    --primary: 0.7952 0.1633 74.41;
     --primary-foreground: 0.2 0.004 286;
-    --secondary: 0.7022 0.224 313.38;
+    --secondary: 0.6392 0.2163 313.44;
     --secondary-foreground: 1 0 0;
     --warning: 0.7151 0.1867 42.71;
     --warning-foreground: 1 0 0;
@@ -113,7 +113,7 @@
     --muted-foreground: 1 0 0;
     --accent: 0.9614 0.0013 286.38;
     --accent-foreground: 0 0 0;
-    --ring: 0.8624 0.1497 86.22;
+    --ring: 0.7952 0.1633 74.41;
     --dialog: 0.9884 0.0013 286.38;
     --info: 0.7663 0.130483 196.6605;
     --info-foreground: 1 0 0;
@@ -123,14 +123,14 @@
     --fatal-foreground: 1 0 0;
     --sidebar: 0.9794 0.0013 286.38;
     --sidebar-foreground: 0 0 0;
-    --sidebar-primary: 0.8624 0.1497 86.22;
+    --sidebar-primary: 0.7952 0.1633 74.41;
     --sidebar-primary-foreground: 0.2 0.004 286;
     --sidebar-accent: 0.9614 0.0013 286.38;
     --sidebar-accent-foreground: 0 0 0;
     --sidebar-border: 0.907 0.0013 286.37;
-    --sidebar-ring: 0.8624 0.1497 86.22;
-    --chart-1: 0.8624 0.1497 86.22;
-    --chart-2: 0.7022 0.224 313.38;
+    --sidebar-ring: 0.7952 0.1633 74.41;
+    --chart-1: 0.7952 0.1633 74.41;
+    --chart-2: 0.6392 0.2163 313.44;
     --chart-3: 0.6311 0.2071 284.74;
     --chart-4: 0.7329 0.1934 150.84;
     --chart-5: 0.7151 0.1867 42.71;
@@ -139,9 +139,9 @@
 
   html.dark,
   [data-theme="dark"] {
-    --primary: 0.7952 0.1633 74.41;
+    --primary: 0.8284 0.1581 79.17;
     --primary-foreground: 0.2 0.004 286;
-    --secondary: 0.6392 0.2163 313.44;
+    --secondary: 0.7022 0.224 313.38;
     --secondary-foreground: 1 0 0;
     --warning: 0.7421 0.1657 44.06;
     --warning-foreground: 0.2 0.004 286;
@@ -256,7 +256,7 @@
     --sidebar-border: 0.2186 0.0039 286.08;
     --sidebar-ring: 0.8284 0.1581 79.17;
     --chart-1: 0.8284 0.1581 79.17;
-    --chart-2: 0.6392 0.2163 313.44;
+    --chart-2: 0.7022 0.224 313.38;
     --chart-3: 0.7438 0.140683 288.5116;
     --chart-4: 0.7744 0.1681 154.27;
     --chart-5: 0.7421 0.1657 44.06;
