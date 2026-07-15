@@ -18,10 +18,25 @@ interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   children?: React.ReactNode;
 }
 
+// Dedicated to AnimatedButton only — decoupled from the numbered color scale
+// (whose per-step hex values are theme-mirrored) so face/wall contrast can't
+// invert if the scale's wiring changes. See --animated-*-face/-wall in globals.css.
 const wallColor: Record<AnimatedButtonColor, string> = {
-  primary: "bg-primary-600 dark:bg-primary-700",
-  secondary: "bg-secondary-700 dark:bg-secondary-800",
-  default: "bg-default-400 dark:bg-default-800",
+  primary: "bg-animated-primary-wall",
+  secondary: "bg-animated-secondary-wall",
+  default: "bg-animated-default-wall",
+};
+
+const faceColor: Record<AnimatedButtonColor, string> = {
+  primary: "bg-animated-primary-face",
+  secondary: "bg-animated-secondary-face",
+  default: "bg-animated-default-face",
+};
+
+const faceHoverColor: Record<AnimatedButtonColor, string> = {
+  primary: "hover:bg-animated-primary-face-hover",
+  secondary: "hover:bg-animated-secondary-face-hover",
+  default: "hover:bg-animated-default-face-hover",
 };
 
 export function AnimatedButton({
@@ -64,6 +79,7 @@ export function AnimatedButton({
         size={size === "xl" ? "lg" : "md"}
         isDisabled={!!disabled}
         disablePressTranslate
+        disableDefaultColorOverride
         onPointerDown={() => { if (!disabled) setPressed(true); }}
         onPointerUp={() => setPressed(false)}
         onPointerLeave={() => setPressed(false)}
@@ -75,12 +91,11 @@ export function AnimatedButton({
           // same 8px so it sits flush with the wall, per the two-layer press spec.
           "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-large font-semibold",
           size === "xl" ? "px-8 text-base" : "px-6 text-sm",
-          color === "default" && "bg-default-200 text-foreground dark:bg-default-700",
-          
+          faceColor[color],
+          color === "default" && "text-foreground",
+
           // Qui's Button overrides to cancel visual conflicts with the wall/press illusion
-          color === "primary" && "hover:bg-primary",
-          color === "secondary" && "hover:bg-secondary",
-          color === "default" && "hover:bg-default-200 dark:hover:bg-default-700",
+          faceHoverColor[color],
           "motion-safe:active:scale-100",
           "disabled:opacity-100",
           
