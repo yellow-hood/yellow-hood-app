@@ -15,6 +15,7 @@ const nunito = localFont({
 
 const iranSansXV = localFont({
   src: "../fonts/IRANSansXV.ttf",
+  weight: "100 900",
   variable: "--font-iranxv",
   display: "swap",
   fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "sans-serif"],

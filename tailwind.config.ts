@@ -72,6 +72,10 @@ const config: Config = {
         lead: ["1.25rem", { lineHeight: "1.4" }],
         subtitle: ["1.5rem", { lineHeight: "2rem" }],
       },
+      // Yellow Hood Design System typography "Label" role weight
+      fontWeight: {
+        label: "700",
+      },
       // Yellow Hood Design System radius tokens
       borderRadius: {
         small: "8px",
