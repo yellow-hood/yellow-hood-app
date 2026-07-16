@@ -44,6 +44,25 @@ const config: Config = {
       96: "24rem",
     },
     extend: {
+      // Yellow Hood Design System named spacing scale — additive on top of the
+      // numeric 0–96 scale above (theme.spacing); string keys can't collide
+      // with those numeric keys, so nothing that already uses the numeric
+      // scale (p-4, gap-6, w-10, etc.) is affected.
+      spacing: {
+        "unit-xs": "0.5rem",
+        "unit-sm": "0.75rem",
+        "unit-md": "1rem",
+        "unit-lg": "1.375rem",
+        "unit-xl": "2.25rem",
+        "unit-2xl": "3rem",
+        "unit-3xl": "5rem",
+        "unit-4xl": "7.5rem",
+        "unit-5xl": "14rem",
+        "unit-6xl": "18rem",
+        "unit-7xl": "24rem",
+        "unit-8xl": "32rem",
+        "unit-9xl": "40rem",
+      },
       fontFamily: {
         nunito: ["var(--font-nunito)"],
         iranxv: ["var(--font-iranxv)"],

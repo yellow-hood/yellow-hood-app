@@ -173,15 +173,15 @@ const SURFACE_TOKENS = [
 ] as const;
 
 const SPACING_SWATCHES = [
-  { token: "1", widthClass: "w-1" },
-  { token: "2", widthClass: "w-2" },
-  { token: "3", widthClass: "w-3" },
-  { token: "4", widthClass: "w-4" },
-  { token: "6", widthClass: "w-6" },
-  { token: "8", widthClass: "w-8" },
-  { token: "10", widthClass: "w-10" },
-  { token: "12", widthClass: "w-12" },
-  { token: "16", widthClass: "w-16" },
+  { token: "unit-xs", widthClass: "w-unit-xs" },
+  { token: "unit-sm", widthClass: "w-unit-sm" },
+  { token: "unit-md", widthClass: "w-unit-md" },
+  { token: "unit-lg", widthClass: "w-unit-lg" },
+  { token: "unit-xl", widthClass: "w-unit-xl" },
+  { token: "unit-2xl", widthClass: "w-unit-2xl" },
+  { token: "unit-3xl", widthClass: "w-unit-3xl" },
+  { token: "unit-4xl", widthClass: "w-unit-4xl" },
+  { token: "unit-5xl", widthClass: "w-unit-5xl" },
 ] as const;
 
 const RADIUS_SWATCHES = [
