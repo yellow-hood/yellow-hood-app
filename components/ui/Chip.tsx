@@ -47,6 +47,24 @@ const defaultColorOverride: Record<string, string> = {
   flat: "bg-[#52525B]/10 text-[#52525B] hover:bg-[#52525B]/15 dark:bg-[#E4E4E7]/10 dark:text-[#E4E4E7] dark:hover:bg-[#E4E4E7]/15",
 };
 
+// Trial fix (Fix card "Ghost/Bordered Non-Default Text Contrast Too Low in
+// Light Mode"): same bug as Button.tsx's Ghost/Bordered had — Chip's Bordered
+// variant resolves non-default colors' rest-state border+text straight to
+// each color's semantic DEFAULT (qui's `border-{color} text-{color}`
+// compound class), which is low contrast against white in light mode. Same
+// fix, same step-700 hex values as Button.tsx's GHOST_BORDERED_CONTRAST_STEP_700
+// (never darker than 700, per a hard user constraint). The dark: pair
+// re-asserts qui's own theme-aware classes so dark mode (already fine) is
+// unaffected. Hover (`[a&]:hover:bg-{color}/5`) is untouched. Trial only —
+// do not mirror these values into the Notion doc yet.
+const nonDefaultContrastOverride: Record<string, string> = {
+  primary: "border-[#C97106] text-[#C97106] dark:border-primary dark:text-primary",
+  secondary: "border-[#A64DCC] text-[#A64DCC] dark:border-secondary dark:text-secondary",
+  warning: "border-[#CC5B29] text-[#CC5B29] dark:border-warning dark:text-warning",
+  success: "border-[#0E793C] text-[#0E793C] dark:border-success dark:text-success",
+  error: "border-[#920B3A] text-[#920B3A] dark:border-error dark:text-error",
+};
+
 const dotColorMap: Record<string, string> = {
   primary: "bg-primary",
   secondary: "bg-secondary",
@@ -87,6 +105,7 @@ export function Chip({
         // qui's built-in radius suffixes.
         "!rounded-medium",
         color === "default" && defaultColorOverride[badgeVariant],
+        badgeVariant === "bordered" && badgeColor !== "default" && nonDefaultContrastOverride[badgeColor],
         isDisabled && "pointer-events-none opacity-40",
         onClose && "pr-1",
         className,
@@ -94,9 +113,16 @@ export function Chip({
       {...(props as Omit<React.ComponentProps<"span">, "color">)}
     >
       {variant === "dot" && (
+        // DS-10: tailwind.config.ts's custom `theme.spacing` scale is
+        // whole-number-only (no "1.5"/"0.5" steps), so `h-1.5 w-1.5 mr-1.5`
+        // resolved to nothing at all — the marker rendered as an invisible
+        // 0x0 box, leaving a phantom gap-1 before the text with no visible
+        // dot to justify it. Arbitrary-value classes bypass the theme scale
+        // entirely; 6px is the same size Tailwind's own default "1.5" step
+        // would have produced (0.375rem), not a new/invented value.
         <span
           className={cn(
-            "mr-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full",
+            "mr-[6px] inline-block h-[6px] w-[6px] flex-shrink-0 rounded-full",
             dotColorMap[badgeColor] ?? "bg-default-400",
           )}
         />
