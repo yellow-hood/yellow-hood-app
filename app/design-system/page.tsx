@@ -855,9 +855,12 @@ export default function DesignSystemPage() {
                 </div>
                 <p className="text-xs text-default-500">
                   This component currently exposes no `disabled`, `error`, or `loading` props — only its
-                  default and native `focus:` state are shown above. This is a real gap in the component
-                  itself, not a limitation of this page; it is flagged for follow-up rather than added
-                  here, since extending OtpInput.tsx is out of scope for this task.
+                  default, hover, and native `focus:` states are shown above (idle/hover/focus border
+                  colors now follow Input's theme-aware bordered-state pattern, and the cell background
+                  matches Input's flat `bg-muted/5` exactly, unchanged across all three states). This is a
+                  real gap in the component itself, not a limitation of this page; it is flagged for
+                  follow-up rather than added here, since extending OtpInput.tsx is out of scope for this
+                  task.
                 </p>
 
                 <Separator className="bg-default-100" />
@@ -865,11 +868,11 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Cell heights are pinned to match components/ui/Input.tsx exactly — width is independent, just this component's own proportional cell width. `lg` — 48×56px per cell — is the default (no `size` prop), height-matched to Input's `lg` (56px). `sm` — 32×40px per cell — is a new opt-in size, height-matched to Input's default/md (40px)."
+                    description="Cell heights are pinned to match components/ui/Input.tsx exactly — width is independent, just this component's own proportional cell width. `lg` — 48×56px per cell — is the default (no `size` prop), height-matched to Input's `lg` (56px). `sm` — 40×40px per cell — is a new opt-in size, height-matched to Input's default/md (40px)."
                   />
                   <div className="flex flex-wrap items-start gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2">
-                      <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">sm — 32×40px</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">sm — 40×40px</p>
                       <OtpInputDemo size="sm" />
                     </div>
                     <div className="space-y-2">
