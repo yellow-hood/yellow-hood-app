@@ -45,8 +45,14 @@ export function Button({
   // inside qui's own Button implementation. Icon-only buttons need both dimensions
   // overridden (qui's icon-only sizing uses `size-9`, not a separate h-9/w-9 pair).
   const isDefaultOrMd = size === undefined || size === "md";
+  // Icon-only md also needs padding forced to 0: qui's own `py-2` (from its md
+  // size class) is never cancelled by its `size-9 px-0` icon-only classes, and
+  // `has-[>svg]:px-3` outranks a plain `px-0` on specificity (the `:has()`
+  // pseudo-class counts as an extra selector) — leaving 12px horizontal /
+  // 8px vertical padding inside an otherwise-correctly-square 40x40 box. `!p-0`
+  // forces both axes to 0, matching how sm/lg's own classes have no py at all.
   const sizeOverride = isDefaultOrMd
-    ? ("isIconOnly" in props && props.isIconOnly ? "h-10 w-10" : "h-10")
+    ? ("isIconOnly" in props && props.isIconOnly ? "h-10 w-10 !p-0" : "h-10")
     : undefined;
 
   // Border-radius is pinned per size to the Design System doc's Button Sizes
