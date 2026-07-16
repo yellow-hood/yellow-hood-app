@@ -9,9 +9,9 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     /* Yellow Hood Design System tokens */
-    --primary: 0.8624 0.1497 86.22;
+    --primary: 0.7952 0.1633 74.41;
     --primary-foreground: 0.2 0.004 286;
-    --secondary: 0.7022 0.224 313.38;
+    --secondary: 0.6392 0.2163 313.44;
     --secondary-foreground: 1 0 0;
     --warning: 0.7151 0.1867 42.71;
     --warning-foreground: 1 0 0;
@@ -23,6 +23,85 @@
     --foreground: 0.2103 0.0059 285.82;
     --border: 0.907 0.0013 286.37;
     --divider: 0.9197 0.004 286.32;
+    /* Raw hex (not OKLCH) to match the Notion doc's documented values exactly, same
+       rationale as the numbered scale steps below */
+    --default: #E4E4E7;
+    --default-foreground: #18181B;
+
+    /* Numbered color scale steps (light values; dark overrides below) */
+    --primary-50: #FFFAEB;
+    --primary-100: #FEF0C7;
+    --primary-200: #FEE089;
+    --primary-300: #FDCA4C;
+    --primary-400: #FDB933;
+    --primary-500: #F9AA1A;
+    --primary-600: #E48D09;
+    --primary-700: #C97106;
+    --primary-800: #9D5508;
+    --primary-900: #5C2F00;
+    --secondary-50: #F5EEFF;
+    --secondary-100: #EBDCFF;
+    --secondary-200: #E1CBFF;
+    --secondary-300: #D7BBFF;
+    --secondary-400: #CDA9FF;
+    --secondary-500: #CF6AFF;
+    --secondary-600: #B958E6;
+    --secondary-700: #A64DCC;
+    --secondary-800: #8C3EAF;
+    --secondary-900: #672A7E;
+    --warning-50: #FFF3EE;
+    --warning-100: #FFEAD9;
+    --warning-200: #FFCAA5;
+    --warning-300: #FF8F5B;
+    --warning-400: #FF844B;
+    --warning-500: #FF7332;
+    --warning-600: #E6672E;
+    --warning-700: #CC5B29;
+    --warning-800: #B34F24;
+    --warning-900: #803211;
+    --danger-50: #FEE7EF;
+    --danger-100: #FDD0DF;
+    --danger-200: #FAA0BF;
+    --danger-300: #F871A0;
+    --danger-400: #F54180;
+    --danger-500: #F31260;
+    --danger-600: #C20E4D;
+    --danger-700: #920B3A;
+    --danger-800: #610726;
+    --danger-900: #310413;
+    --success-50: #E8FAF0;
+    --success-100: #D1F4E0;
+    --success-200: #A2E9C1;
+    --success-300: #74DFA2;
+    --success-400: #45D483;
+    --success-500: #17C964;
+    --success-600: #12A150;
+    --success-700: #0E793C;
+    --success-800: #095028;
+    --success-900: #052814;
+    --tertiary-50: #EBF2FF;
+    --tertiary-100: #D6E3FF;
+    --tertiary-200: #C2D4FF;
+    --tertiary-300: #AEC5FF;
+    --tertiary-400: #99B6FF;
+    --tertiary-500: #7792FF;
+    --tertiary-600: #6A84F2;
+    --tertiary-700: #5C75E6;
+    --tertiary-800: #4E67D9;
+    --tertiary-900: #24389D;
+
+    /* AnimatedButton dedicated face/wall colors — decoupled from the numbered
+       scale so face/wall contrast direction stays stable regardless of how
+       the underlying scale is wired between themes */
+    --animated-primary-face: #FDCA4C;
+    --animated-primary-wall: #E48D09;
+    --animated-secondary-face: #CF6AFF;
+    --animated-secondary-wall: #A64DCC;
+    --animated-default-face: #E4E4E7;
+    --animated-default-wall: #A1A1AA;
+    --animated-primary-face-hover: #F9C142;
+    --animated-secondary-face-hover: #C966F7;
+    --animated-default-face-hover: #DADADE;
 
     /* @qpub/qui required tokens */
     --card: 1 0 0;
@@ -34,7 +113,7 @@
     --muted-foreground: 1 0 0;
     --accent: 0.9614 0.0013 286.38;
     --accent-foreground: 0 0 0;
-    --ring: 0.8624 0.1497 86.22;
+    --ring: 0.7952 0.1633 74.41;
     --dialog: 0.9884 0.0013 286.38;
     --info: 0.7663 0.130483 196.6605;
     --info-foreground: 1 0 0;
@@ -44,14 +123,14 @@
     --fatal-foreground: 1 0 0;
     --sidebar: 0.9794 0.0013 286.38;
     --sidebar-foreground: 0 0 0;
-    --sidebar-primary: 0.8624 0.1497 86.22;
+    --sidebar-primary: 0.7952 0.1633 74.41;
     --sidebar-primary-foreground: 0.2 0.004 286;
     --sidebar-accent: 0.9614 0.0013 286.38;
     --sidebar-accent-foreground: 0 0 0;
     --sidebar-border: 0.907 0.0013 286.37;
-    --sidebar-ring: 0.8624 0.1497 86.22;
-    --chart-1: 0.8624 0.1497 86.22;
-    --chart-2: 0.7022 0.224 313.38;
+    --sidebar-ring: 0.7952 0.1633 74.41;
+    --chart-1: 0.7952 0.1633 74.41;
+    --chart-2: 0.6392 0.2163 313.44;
     --chart-3: 0.6311 0.2071 284.74;
     --chart-4: 0.7329 0.1934 150.84;
     --chart-5: 0.7151 0.1867 42.71;
@@ -62,7 +141,7 @@
   [data-theme="dark"] {
     --primary: 0.8284 0.1581 79.17;
     --primary-foreground: 0.2 0.004 286;
-    --secondary: 0.6392 0.2163 313.44;
+    --secondary: 0.7022 0.224 313.38;
     --secondary-foreground: 1 0 0;
     --warning: 0.7421 0.1657 44.06;
     --warning-foreground: 0.2 0.004 286;
@@ -74,6 +153,81 @@
     --foreground: 0.9851 0.0001 263.28;
     --border: 0.22 0.004 286;
     --divider: 0.3703 0.0119 285.81;
+    --default: #3F3F46;
+    --default-foreground: #FAFAFA;
+
+    /* Numbered color scale steps — dark overrides */
+    --primary-50: #3D1F00;
+    --primary-100: #5C2F00;
+    --primary-200: #9D5508;
+    --primary-300: #C97106;
+    --primary-400: #E48D09;
+    --primary-500: #F9AA1A;
+    --primary-600: #FDB933;
+    --primary-700: #FDCA4C;
+    --primary-800: #FEE089;
+    --primary-900: #FEF0C7;
+    --secondary-50: #672A7E;
+    --secondary-100: #8C3EAF;
+    --secondary-200: #A64DCC;
+    --secondary-300: #B958E6;
+    --secondary-400: #CF6AFF;
+    --secondary-500: #D7BBFF;
+    --secondary-600: #E1CBFF;
+    --secondary-700: #EBDCFF;
+    --secondary-800: #F5EEFF;
+    --secondary-900: #F5EEFF;
+    --warning-50: #803211;
+    --warning-100: #B34F24;
+    --warning-200: #CC5B29;
+    --warning-300: #E6672E;
+    --warning-400: #FF7332;
+    --warning-500: #FF844B;
+    --warning-600: #FF8F5B;
+    --warning-700: #FFCAA5;
+    --warning-800: #FFEAD9;
+    --warning-900: #FFF3EE;
+    --danger-50: #310413;
+    --danger-100: #610726;
+    --danger-200: #920B3A;
+    --danger-300: #C20E4D;
+    --danger-400: #F31260;
+    --danger-500: #F54180;
+    --danger-600: #F871A0;
+    --danger-700: #FAA0BF;
+    --danger-800: #FDD0DF;
+    --danger-900: #FEE7EF;
+    --success-50: #052814;
+    --success-100: #095028;
+    --success-200: #0E793C;
+    --success-300: #12A150;
+    --success-400: #17C964;
+    --success-500: #45D483;
+    --success-600: #74DFA2;
+    --success-700: #A2E9C1;
+    --success-800: #D1F4E0;
+    --success-900: #E8FAF0;
+    --tertiary-50: #24389D;
+    --tertiary-100: #4E67D9;
+    --tertiary-200: #5C75E6;
+    --tertiary-300: #6A84F2;
+    --tertiary-400: #7792FF;
+    --tertiary-500: #99B6FF;
+    --tertiary-600: #AEC5FF;
+    --tertiary-700: #C2D4FF;
+    --tertiary-800: #D6E3FF;
+    --tertiary-900: #EBF2FF;
+
+    /* AnimatedButton dedicated face/wall colors — dark overrides */
+    --animated-primary-face: #FDB933;
+    --animated-primary-wall: #C97106;
+    --animated-secondary-face: #B958E6;
+    --animated-secondary-wall: #8C3EAF;
+    --animated-default-face: #52525B;
+    --animated-default-wall: #27272A;
+    --animated-primary-face-hover: #F5AE2C;
+    --animated-secondary-face-hover: #B254DE;
+    --animated-default-face-hover: #4C4C54;
 
     /* @qpub/qui required tokens (dark) */
     --card: 0 0 0;
@@ -102,7 +256,7 @@
     --sidebar-border: 0.2186 0.0039 286.08;
     --sidebar-ring: 0.8284 0.1581 79.17;
     --chart-1: 0.8284 0.1581 79.17;
-    --chart-2: 0.6392 0.2163 313.44;
+    --chart-2: 0.7022 0.224 313.38;
     --chart-3: 0.7438 0.140683 288.5116;
     --chart-4: 0.7744 0.1681 154.27;
     --chart-5: 0.7421 0.1657 44.06;

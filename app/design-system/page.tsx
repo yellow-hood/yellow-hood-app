@@ -72,6 +72,19 @@ const SECONDARY_SWATCHES = [
   { step: 900, bgClass: "bg-secondary-900" },
 ] as const;
 
+const TERTIARY_SWATCHES = [
+  { step: 50, bgClass: "bg-tertiary-50" },
+  { step: 100, bgClass: "bg-tertiary-100" },
+  { step: 200, bgClass: "bg-tertiary-200" },
+  { step: 300, bgClass: "bg-tertiary-300" },
+  { step: 400, bgClass: "bg-tertiary-400" },
+  { step: 500, bgClass: "bg-tertiary-500" },
+  { step: 600, bgClass: "bg-tertiary-600" },
+  { step: 700, bgClass: "bg-tertiary-700" },
+  { step: 800, bgClass: "bg-tertiary-800" },
+  { step: 900, bgClass: "bg-tertiary-900" },
+] as const;
+
 const WARNING_SWATCHES = [
   { step: 50, bgClass: "bg-warning-50" },
   { step: 100, bgClass: "bg-warning-100" },
@@ -124,18 +137,7 @@ const DEFAULT_SWATCHES = [
   { step: 900, bgClass: "bg-default-900" },
 ] as const;
 
-type ColorFamily = "primary" | "secondary" | "warning" | "danger" | "success" | "default";
-
-// Rough per-family lightness threshold for swatch label contrast. Not a design token —
-// just picks readable label text for the live hex readout.
-const TEXT_CONTRAST_THRESHOLD: Record<ColorFamily, number> = {
-  primary: 700,
-  secondary: 500,
-  warning: 600,
-  danger: 500,
-  success: 600,
-  default: 600,
-};
+type ColorFamily = "primary" | "secondary" | "tertiary" | "warning" | "danger" | "success" | "default";
 
 // Semantic single-value tokens, driven by the CSS variables in app/globals.css and the
 // @qpub/qui preset (oklch(var(--primary)), etc). Unlike the numbered scales above, these
@@ -359,6 +361,64 @@ export default function DesignSystemPage() {
                   />
                 </div>
               </div>
+
+              <Separator className="bg-default-100" />
+
+              <div className="space-y-6">
+                <SubgroupHeader
+                  title="Persian (FA) Type Scale"
+                  description="Parallel Persian scale, matched role-for-role to the English scale above. Every sample uses the font-fa utility (globals.css) — already pairing IRANSansXV with its documented 'dots' 8 variation setting — and dir=&quot;rtl&quot; on the title for correct right-to-left flow."
+                />
+                <div className="space-y-8">
+                  <TypographySample
+                    dir="rtl"
+                    label="H1 / Page title — 72px/72px, 800 extrabold"
+                    titleClass="font-fa text-[72px] leading-[72px] font-extrabold"
+                    titleText="خوش آمدید"
+                    description="Reserved for one primary title per page."
+                  />
+                  <Separator className="bg-default-100" />
+                  <TypographySample
+                    dir="rtl"
+                    label="H2 / Section title — 36px/40px, 700 bold"
+                    titleClass="font-fa text-[36px] leading-[40px] font-bold"
+                    titleText="معرفی بخش رنگ‌ها و تایپوگرافی"
+                    description="Use for major content groups and section starts."
+                  />
+                  <Separator className="bg-default-100" />
+                  <TypographySample
+                    dir="rtl"
+                    label="Subtitle / Secondary heading — 24px/32px, 600 demibold"
+                    titleClass="font-fa text-[24px] leading-[32px] font-semibold text-foreground"
+                    titleText="راهنمای استفاده از توکن‌ها"
+                    description="Pairs with H1/H2 as a secondary heading."
+                  />
+                  <Separator className="bg-default-100" />
+                  <TypographySample
+                    dir="rtl"
+                    label="Lead / Intro copy — 20px/28px, 300 light"
+                    titleClass="font-fa text-lead font-light text-default-500"
+                    titleText="متن مقدماتی به کاربران کمک می‌کند تا محتوا را سریع‌تر مرور کنند."
+                    description="Keep it short and avoid putting actions inside lead text. Reuses the corrected text-lead token above, now 20px/28px in both EN and FA."
+                  />
+                  <Separator className="bg-default-100" />
+                  <TypographySample
+                    dir="rtl"
+                    label="Body / Default copy — 16px/24px, 400 normal"
+                    titleClass="font-fa text-[16px] leading-[24px] font-normal text-foreground"
+                    titleText="این متن نمونه، دستورالعمل‌ها و جزئیات پشتیبان را نمایش می‌دهد."
+                    description="Prefer complete sentences with concise structure."
+                  />
+                  <Separator className="bg-default-100" />
+                  <TypographySample
+                    dir="rtl"
+                    label="Label / Forms and controls — 12px/16px, 700 bold"
+                    titleClass="font-fa text-[12px] leading-[16px] font-bold text-foreground"
+                    titleText="آدرس ایمیل"
+                    description="Keep labels specific and use sentence case."
+                  />
+                </div>
+              </div>
             </div>
           </DocCard>
           <UsageBlock
@@ -384,13 +444,14 @@ export default function DesignSystemPage() {
                 />
                 <ColorScaleGrid title="Primary (Amber-Gold)" family="primary" swatches={PRIMARY_SWATCHES} />
                 <ColorScaleGrid title="Secondary (Purple)" family="secondary" swatches={SECONDARY_SWATCHES} />
+                <ColorScaleGrid title="Tertiary (Blue)" family="tertiary" swatches={TERTIARY_SWATCHES} />
                 <ColorScaleGrid title="Warning (Orange)" family="warning" swatches={WARNING_SWATCHES} />
                 <ColorScaleGrid title="Danger (Pink/Red)" family="danger" swatches={DANGER_SWATCHES} />
                 <ColorScaleGrid title="Success (Green)" family="success" swatches={SUCCESS_SWATCHES} />
                 <ColorScaleGrid title="Default (Neutral)" family="default" swatches={DEFAULT_SWATCHES} />
                 <p className="text-xs text-default-500">
-                  Flag: these numbered scales use one flat hex per step regardless of light/dark mode —
-                  toggling the page above will not change them. See QA note on the spec card.
+                  Only Default remains flat by design — Primary, Secondary, Tertiary, Warning,
+                  Danger, and Success are all theme-aware and switch with the toggle above.
                 </p>
               </div>
 
@@ -505,16 +566,10 @@ export default function DesignSystemPage() {
                 </div>
                 <p className="text-xs text-default-500">
                   Disabled and loading above use the component&apos;s real `isDisabled` / `isLoading`
-                  props. AnimatedButton defines a real press animation (translateY on pointer-down) but
-                  no dedicated hover style, so hovering will not visibly change it — that is the
-                  component&apos;s actual behavior today, not an omission on this page.
+                  props. AnimatedButton defines a real press animation (translateY on pointer-down)
+                  plus a dedicated, subtle per-color hover shift on the face — hover the buttons above
+                  to see it.
                 </p>
-                <p className="text-xs text-default-500">
-                  Corrected 2026-07-06: the wall layer&apos;s depth (8px riser, previously fully hidden
-                  behind the face at every state) and its per-color wall colors were fixed in
-                  `components/ui/AnimatedButton.tsx` and are now working as specified above.
-                </p>
-
                 <Separator className="bg-default-100" />
 
                 <div className="space-y-4">
@@ -1061,16 +1116,18 @@ function TypographySample({
   titleClass,
   titleText,
   description,
+  dir,
 }: {
   label: string;
   titleClass: string;
   titleText: string;
   description: string;
+  dir?: "ltr" | "rtl";
 }) {
   return (
     <div className="space-y-4">
       <p className="text-xs font-semibold text-default-500">{label}</p>
-      <p className={titleClass}>{titleText}</p>
+      <p className={titleClass} dir={dir}>{titleText}</p>
       <p className="text-sm text-default-500">{description}</p>
     </div>
   );
@@ -1105,17 +1162,9 @@ function ColorScaleGrid({
         <p className="text-xs text-default-500">{`bg-${family}-{step}`}</p>
       </div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {swatches.map(({ step, bgClass }) => {
-          const textClass = step >= TEXT_CONTRAST_THRESHOLD[family] ? "text-white" : "text-black";
-          return (
-            <ComputedHexSwatch
-              key={`${family}-${step}`}
-              label={`${family}-${step}`}
-              bgClass={bgClass}
-              textClass={textClass}
-            />
-          );
-        })}
+        {swatches.map(({ step, bgClass }) => (
+          <ComputedHexSwatch key={`${family}-${step}`} label={`${family}-${step}`} bgClass={bgClass} />
+        ))}
       </div>
     </div>
   );
@@ -1299,21 +1348,32 @@ function ListRowsDemo() {
 function ComputedHexSwatch({
   label,
   bgClass,
-  textClass,
 }: {
   label: string;
   bgClass: string;
-  textClass: string;
 }) {
   const ref = React.useRef<HTMLDivElement | null>(null);
   const [hex, setHex] = React.useState<string>("—");
+  const [textClass, setTextClass] = React.useState<string>("text-black");
+  const { resolvedTheme } = useTheme();
 
   React.useEffect(() => {
-    if (!ref.current) return;
-    const bg = window.getComputedStyle(ref.current).backgroundColor;
-    const next = rgbStringToHex(bg);
-    if (next) setHex(next);
-  }, []);
+    // next-themes applies the new class to <html> in its own effect, which — as a
+    // parent of this component — commits after this effect in the same passive-effect
+    // pass. Deferring the read to the next frame lets that DOM mutation land first, so
+    // this doesn't read a stale (one-toggle-behind) background right after resolvedTheme changes.
+    const raf = requestAnimationFrame(() => {
+      if (!ref.current) return;
+      const bg = window.getComputedStyle(ref.current).backgroundColor;
+      const rgb = parseRgb(bg);
+      if (!rgb) return;
+      setHex(rgbToHex(rgb));
+      // ~0.179 is the relative-luminance crossover where black-on-bg and white-on-bg
+      // contrast ratios are equal (WCAG contrast-ratio formula) — above it black wins.
+      setTextClass(relativeLuminance(rgb) > 0.179 ? "text-black" : "text-white");
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [resolvedTheme]);
 
   return (
     <div
@@ -1333,13 +1393,29 @@ function ComputedHexSwatch({
   );
 }
 
-function rgbStringToHex(input: string) {
+function parseRgb(input: string) {
   const match = input.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
   if (!match) return null;
-  const r = clampByte(Number(match[1]));
-  const g = clampByte(Number(match[2]));
-  const b = clampByte(Number(match[3]));
+  return {
+    r: clampByte(Number(match[1])),
+    g: clampByte(Number(match[2])),
+    b: clampByte(Number(match[3])),
+  };
+}
+
+function rgbToHex({ r, g, b }: { r: number; g: number; b: number }) {
   return `#${toHex2(r)}${toHex2(g)}${toHex2(b)}`.toUpperCase();
+}
+
+// WCAG relative luminance (per-swatch, computed from the swatch's own actual
+// rendered background) — used to pick readable black/white label text per swatch
+// instead of a single fixed assumption for an entire row.
+function relativeLuminance({ r, g, b }: { r: number; g: number; b: number }) {
+  const channel = (c: number) => {
+    const s = c / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
 }
 
 function clampByte(n: number) {
