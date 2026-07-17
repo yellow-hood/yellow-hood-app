@@ -151,24 +151,34 @@ const SEMANTIC_TOKENS = [
   { name: "Success", bg: "bg-success", text: "text-success-foreground", border: "border-success" },
   { name: "Warning", bg: "bg-warning", text: "text-warning-foreground", border: "border-warning" },
   { name: "Error (Danger)", bg: "bg-error", text: "text-error-foreground", border: "border-error" },
-  { name: "Default", bg: "bg-default", text: "text-foreground", border: "border-default-300 dark:border-default-400" },
+  { name: "Default", bg: "bg-default", text: "text-default-foreground", border: "border-default-300 dark:border-default-400" },
 ] as const;
 
 const SURFACE_TOKENS = [
   {
-    name: "bg-surface",
+    name: "background",
     className: "bg-background",
     description: "Primary layout background",
   },
   {
-    name: "bg-elevated",
-    className: "bg-default-50 dark:bg-default-900",
+    name: "content1",
+    className: "bg-background dark:bg-default-900",
     description: "Cards and raised containers",
   },
   {
-    name: "bg-subtle",
+    name: "content2",
     className: "bg-default-100 dark:bg-default-800",
     description: "Nested groups and quiet emphasis",
+  },
+  {
+    name: "content3",
+    className: "bg-default-200 dark:bg-default-700",
+    description: "Deeper nested layers",
+  },
+  {
+    name: "content4",
+    className: "bg-default-300 dark:bg-default-600",
+    description: "Deepest nested / highest-contrast subtle surface",
   },
 ] as const;
 
@@ -185,9 +195,18 @@ const SPACING_SWATCHES = [
 ] as const;
 
 const RADIUS_SWATCHES = [
+  { name: "None", token: "rounded-none", className: "rounded-none" },
   { name: "Small", token: "rounded-small", className: "rounded-small" },
   { name: "Medium (Controls)", token: "rounded-medium", className: "rounded-medium", highlight: true },
   { name: "Large", token: "rounded-large", className: "rounded-large" },
+  { name: "Full", token: "rounded-full", className: "rounded-full" },
+] as const;
+
+// Yellow Hood Design System border-width tokens (tailwind.config.ts theme.extend.borderWidth).
+const BORDER_WIDTH_SWATCHES = [
+  { name: "Small", token: "border-small", className: "border-small", usage: "default input border, inactive OTP" },
+  { name: "Medium", token: "border-medium", className: "border-medium", usage: "—" },
+  { name: "Large", token: "border-large", className: "border-large", usage: "—" },
 ] as const;
 
 const BUTTON_VARIANTS = ["solid", "bordered", "flat", "ghost"] as const;
@@ -320,7 +339,7 @@ export default function DesignSystemPage() {
                   title="Surface layers"
                   description="Surface tokens communicate depth and grouping without heavy borders."
                 />
-                <div className="grid gap-6 md:grid-cols-3">
+                <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
                   {SURFACE_TOKENS.map((surface) => (
                     <SurfaceTokenPreview key={surface.name} surface={surface} />
                   ))}
@@ -343,7 +362,7 @@ export default function DesignSystemPage() {
             description="Layout rhythm is built on the app's 8pt spacing scale (tailwind.config.ts theme.spacing)."
           />
           <DocCard>
-            <div className="grid gap-10 md:grid-cols-2">
+            <div className="space-y-10">
               <div className="space-y-6">
                 <SubgroupHeader
                   title="Spacing tokens"
@@ -355,21 +374,40 @@ export default function DesignSystemPage() {
                   ))}
                 </div>
               </div>
-              <div className="space-y-6">
-                <SubgroupHeader
-                  title="Radius tokens"
-                  description="`rounded-medium` (12px): Chip, Input, Select, Button sm. `rounded-large` (14px): AnimatedButton, Button md/lg, Card."
-                />
-                <div className="space-y-4 text-xs">
-                  {RADIUS_SWATCHES.map((item) => (
-                    <RadiusRow
-                      key={item.token}
-                      name={item.name}
-                      token={item.token}
-                      className={item.className}
-                      highlight={"highlight" in item ? item.highlight : false}
-                    />
-                  ))}
+              <div className="grid gap-10 md:grid-cols-2">
+                <div className="space-y-6">
+                  <SubgroupHeader
+                    title="Radius tokens"
+                    description="`rounded-medium` (12px): Chip, Input, Select, Button sm. `rounded-large` (14px): AnimatedButton, Button md/lg, Card."
+                  />
+                  <div className="space-y-4 text-xs">
+                    {RADIUS_SWATCHES.map((item) => (
+                      <RadiusRow
+                        key={item.token}
+                        name={item.name}
+                        token={item.token}
+                        className={item.className}
+                        highlight={"highlight" in item ? item.highlight : false}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-6">
+                  <SubgroupHeader
+                    title="Border widths"
+                    description="`border-small` (1px): default input border, inactive OTP. `border-medium` (1.5px) and `border-large` (3px) are documented tokens with no current usage."
+                  />
+                  <div className="space-y-4 text-xs">
+                    {BORDER_WIDTH_SWATCHES.map((item) => (
+                      <BorderWidthRow
+                        key={item.token}
+                        name={item.name}
+                        token={item.token}
+                        className={item.className}
+                        usage={item.usage}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -514,16 +552,16 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Two sizes, role-based not device-based: `lg` for regular primary CTAs, `xl` for hero/single-focus CTAs (e.g. login, onboarding)."
+                    description="Two sizes, role-based not device-based. `xl` — the largest — is for a fixed, full-width bottom-of-page CTA or any standalone hero/single-focus action (e.g. login, onboarding). `lg` is for when the button is paired with another button or sits alongside other content (e.g. inside the Header or Footer)."
                   />
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2 text-center">
-                      <AnimatedButton color="primary" size="lg">Continue</AnimatedButton>
-                      <p className="text-[11px] text-default-500">lg — 48px (regular primary CTA)</p>
-                    </div>
-                    <div className="space-y-2 text-center">
                       <AnimatedButton color="primary" size="xl">Continue</AnimatedButton>
                       <p className="text-[11px] text-default-500">xl — 56px (hero / single-focus CTA)</p>
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <AnimatedButton color="primary" size="lg">Continue</AnimatedButton>
+                      <p className="text-[11px] text-default-500">lg — 48px (regular primary CTA)</p>
                     </div>
                   </div>
                 </div>
@@ -542,11 +580,11 @@ export default function DesignSystemPage() {
                       <p className="text-xs font-semibold uppercase tracking-wide text-default-500">{variant}</p>
                       <div className="flex flex-wrap gap-4">
                         {BUTTON_COLORS.map((color) => (
-                          <Button key={color} variant={variant} color={color} size="md">
+                          <Button key={color} variant={variant} color={color} size="lg">
                             {color}
                           </Button>
                         ))}
-                        <Button variant={variant} color="primary" size="md" isDisabled>
+                        <Button variant={variant} color="primary" size="lg" isDisabled>
                           Disabled
                         </Button>
                       </div>
@@ -574,12 +612,12 @@ export default function DesignSystemPage() {
                               isIconOnly
                               variant="solid"
                               color={color}
-                              size="sm"
-                              aria-label={`${color} settings, small`}
+                              size="lg"
+                              aria-label={`${color} settings, large`}
                             >
-                              <SettingsLinearIcon size={16} />
+                              <SettingsLinearIcon size={20} />
                             </Button>
-                            <p className="text-[11px] text-default-500">sm</p>
+                            <p className="text-[11px] text-default-500">lg</p>
                           </div>
                           <div className="space-y-1 text-center">
                             <Button
@@ -598,12 +636,12 @@ export default function DesignSystemPage() {
                               isIconOnly
                               variant="solid"
                               color={color}
-                              size="lg"
-                              aria-label={`${color} settings, large`}
+                              size="sm"
+                              aria-label={`${color} settings, small`}
                             >
-                              <SettingsLinearIcon size={20} />
+                              <SettingsLinearIcon size={16} />
                             </Button>
-                            <p className="text-[11px] text-default-500">lg</p>
+                            <p className="text-[11px] text-default-500">sm</p>
                           </div>
                         </div>
                       </div>
@@ -622,20 +660,20 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Shown here for the solid variant, primary color only, since size is independent of variant/color."
+                    description="Shown here for the solid variant, primary color only, since size is independent of variant/color. `lg` is for standalone functional actions (e.g. Save, Confirm) — often paired with a Bordered default button beside it. `md` is for buttons inside boxes and popups/modals. `sm` is for buttons that sit close together or need to stay compact, e.g. a card's action row."
                   />
                   <div className="flex flex-wrap items-end gap-6 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2 text-center">
-                      <Button variant="solid" color="primary" size="sm">Continue</Button>
-                      <p className="text-[11px] text-default-500">sm — 28px</p>
+                      <Button variant="solid" color="primary" size="lg">Continue</Button>
+                      <p className="text-[11px] text-default-500">lg — 48px</p>
                     </div>
                     <div className="space-y-2 text-center">
                       <Button variant="solid" color="primary" size="md">Continue</Button>
                       <p className="text-[11px] text-default-500">md — 40px</p>
                     </div>
                     <div className="space-y-2 text-center">
-                      <Button variant="solid" color="primary" size="lg">Continue</Button>
-                      <p className="text-[11px] text-default-500">lg — 48px</p>
+                      <Button variant="solid" color="primary" size="sm">Continue</Button>
+                      <p className="text-[11px] text-default-500">sm — 28px</p>
                     </div>
                   </div>
                 </div>
@@ -664,15 +702,16 @@ export default function DesignSystemPage() {
                   description="Disabled and error/success states below use the component's real props."
                 />
                 <div className="grid gap-6 md:grid-cols-2">
-                  <Input label="Full name" placeholder="Enter your name" helperText="Use your legal first and last name." />
-                  <Input label="Email" color="success" placeholder="name@example.com" helperText="Email looks valid." />
+                  <Input label="Full name" placeholder="Enter your name" helperText="Use your legal first and last name." size="lg" />
+                  <Input label="Email" color="success" placeholder="name@example.com" helperText="Email looks valid." size="lg" />
                   <Input
                     label="Password"
                     type="password"
                     isInvalid
                     errorMessage="Password must be at least 8 characters."
+                    size="lg"
                   />
-                  <Input label="Role" placeholder="Owner" isDisabled helperText="Managed by organization policy." />
+                  <Input label="Role" placeholder="Owner" isDisabled helperText="Managed by organization policy." size="lg" />
                 </div>
                 <p className="text-xs text-default-500">
                   This component has no `isLoading` prop yet, so no loading specimen is shown.
@@ -683,16 +722,16 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Two sizes: default (40px) and `lg` (56px, matching AnimatedButton `xl`). Both use `rounded-medium` (12px) radius; native `sm` (28px) isn't exposed here."
+                    description="Two sizes: `lg` (56px, matching AnimatedButton `xl`) is the primary choice — bigger and easier to read and fill, used first in Login, modals, and popups. The default (40px) size is used only when several inputs need to sit side by side to save space. Both use `rounded-medium` (12px) radius; native `sm` (28px) isn't exposed here."
                   />
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2">
-                      <Input label="Full name" placeholder="Enter your name" />
-                      <p className="text-[11px] text-default-500">default — 40px</p>
-                    </div>
-                    <div className="space-y-2">
                       <Input label="Full name" placeholder="Enter your name" size="lg" />
                       <p className="text-[11px] text-default-500">lg — 56px</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Input label="Full name" placeholder="Enter your name" />
+                      <p className="text-[11px] text-default-500">default — 40px</p>
                     </div>
                   </div>
                 </div>
@@ -727,21 +766,21 @@ export default function DesignSystemPage() {
                 />
                 <div className="grid gap-6 md:grid-cols-2">
                   <Select>
-                    <SelectTrigger className="w-full" aria-label="Role">
+                    <SelectTrigger size="lg" className="w-full" aria-label="Role">
                       <SelectValue placeholder="Select a role" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="editor">Editor</SelectItem>
-                      <SelectItem value="viewer">Viewer</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
+                    <SelectContent size="lg">
+                      <SelectItem size="lg" value="editor">Editor</SelectItem>
+                      <SelectItem size="lg" value="viewer">Viewer</SelectItem>
+                      <SelectItem size="lg" value="admin">Admin</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select isDisabled>
-                    <SelectTrigger className="w-full" aria-label="Role (disabled)">
+                    <SelectTrigger size="lg" className="w-full" aria-label="Role (disabled)">
                       <SelectValue placeholder="Disabled" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="editor">Editor</SelectItem>
+                    <SelectContent size="lg">
+                      <SelectItem size="lg" value="editor">Editor</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -756,17 +795,6 @@ export default function DesignSystemPage() {
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="w-56 space-y-2">
                       <Select>
-                        <SelectTrigger className="w-full" aria-label="Role, default size">
-                          <SelectValue placeholder="Select a role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="editor">Editor</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-[11px] text-default-500">default — 40px</p>
-                    </div>
-                    <div className="w-56 space-y-2">
-                      <Select>
                         <SelectTrigger size="lg" className="w-full" aria-label="Role, large size">
                           <SelectValue placeholder="Select a role" />
                         </SelectTrigger>
@@ -775,6 +803,17 @@ export default function DesignSystemPage() {
                         </SelectContent>
                       </Select>
                       <p className="text-[11px] text-default-500">lg — 56px</p>
+                    </div>
+                    <div className="w-56 space-y-2">
+                      <Select>
+                        <SelectTrigger className="w-full" aria-label="Role, default size">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="editor">Editor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-[11px] text-default-500">default — 40px</p>
                     </div>
                   </div>
                 </div>
@@ -788,7 +827,7 @@ export default function DesignSystemPage() {
                   description="Four independent cells with auto-advance and backspace-to-previous behavior. Type digits to trigger `onComplete`."
                 />
                 <div className="rounded-xl bg-default-50 p-6 dark:bg-default-900">
-                  <OtpInputDemo size="sm" />
+                  <OtpInputDemo size="lg" />
                 </div>
                 <p className="text-xs text-default-500">
                   This component has no `disabled`, `error`, or `loading` props yet — only default,
@@ -804,12 +843,12 @@ export default function DesignSystemPage() {
                   />
                   <div className="flex flex-wrap items-start gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2">
-                      <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">sm — 40×40px</p>
-                      <OtpInputDemo size="sm" />
-                    </div>
-                    <div className="space-y-2">
                       <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">lg — 48×56px (default)</p>
                       <OtpInputDemo size="lg" />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">sm — 40×40px</p>
+                      <OtpInputDemo size="sm" />
                     </div>
                   </div>
                 </div>
@@ -1180,6 +1219,34 @@ function RadiusRow({ name, token, className, highlight }: RadiusRowProps) {
       <div className="space-y-1 text-xs">
         <p className={highlight ? "font-semibold text-secondary" : "font-semibold text-foreground"}>{name}</p>
         <p className="font-mono text-default-500">{token} • {radius}</p>
+      </div>
+    </div>
+  );
+}
+
+type BorderWidthRowProps = {
+  name: string;
+  token: string;
+  className: string;
+  usage: string;
+};
+
+function BorderWidthRow({ name, token, className, usage }: BorderWidthRowProps) {
+  const ref = React.useRef<HTMLDivElement | null>(null);
+  const [borderWidth, setBorderWidth] = React.useState("—");
+
+  React.useEffect(() => {
+    if (!ref.current) return;
+    setBorderWidth(window.getComputedStyle(ref.current).borderWidth);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-4">
+      <div ref={ref} className={`h-10 w-20 border-solid border-default-400 dark:border-default-500 bg-default-100 dark:bg-default-800 ${className}`} />
+      <div className="space-y-1 text-xs">
+        <p className="font-semibold text-foreground">{name}</p>
+        <p className="font-mono text-default-500">{token} • {borderWidth}</p>
+        <p className="text-default-500">{usage}</p>
       </div>
     </div>
   );
