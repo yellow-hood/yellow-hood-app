@@ -219,13 +219,13 @@ const ALERT_TOKENS = [
   { color: "info", name: "Info" },
 ] as const;
 
-// Pixel values are measured live from the rendered h-*/w-* classes below (32/40/56/64px),
+// Pixel values are measured live from the rendered h-*/w-* classes below (32/48/64/80px),
 // matching the Design System doc's Avatar sizing table.
 const AVATAR_SIZES = [
+  { size: "xl", px: 80, avatarClass: "h-20 w-20 rounded-large", textClass: "text-lg", initials: "FH" },
+  { size: "lg", px: 64, avatarClass: "h-16 w-16", textClass: "text-base", initials: "AN" },
+  { size: "md", px: 48, avatarClass: "h-12 w-12", textClass: "text-sm", initials: "KM" },
   { size: "sm", px: 32, avatarClass: "h-8 w-8", textClass: "text-xs", initials: "YH" },
-  { size: "md", px: 40, avatarClass: "h-10 w-10", textClass: "text-sm", initials: "KM" },
-  { size: "lg", px: 56, avatarClass: "h-14 w-14", textClass: "text-base", initials: "AN" },
-  { size: "xl", px: 64, avatarClass: "h-16 w-16", textClass: "text-lg", initials: "FH" },
 ] as const;
 
 type UsageGuidance = {
