@@ -17,7 +17,7 @@ interface OtpInputProps {
 // own proportional cell width, not tied to Input. lg remains the default so no
 // caller relying on the untyped behavior changes without an explicit opt-in.
 const CELL_SIZE_CLASS: Record<OtpInputSize, string> = {
-  sm: "h-10 w-8",
+  sm: "h-10 w-10",
   lg: "h-14 w-12",
 };
 
@@ -73,10 +73,11 @@ export function OtpInput({ onComplete, className, size = "lg" }: OtpInputProps) 
           onChange={(e) => handleChange(i, e)}
           onKeyDown={(e) => handleKeyDown(i, e)}
           className={cn(
-            "rounded-medium border text-center text-xl font-semibold outline-none transition-colors",
+            "rounded-medium border text-center text-base font-medium outline-none transition-colors shrink-0",
             CELL_SIZE_CLASS[size],
-            "border-default-200 dark:border-default-800 bg-background text-foreground",
-            "focus:border-2 focus:border-default-400",
+            "border-default-200 dark:border-default-700 bg-muted/5 text-foreground",
+            "hover:border-default-400 dark:hover:border-default-500",
+            "focus:border-2 focus:border-primary-500",
           )}
         />
       ))}

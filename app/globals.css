@@ -103,6 +103,30 @@
     --animated-secondary-face-hover: #C966F7;
     --animated-default-face-hover: #DADADE;
 
+    /* Button/Chip default-gray — a fixed, component-scoped pair dedicated to
+       Button.tsx/Chip.tsx's "default" color, decoupled from the semantic
+       --default/--default-foreground tokens (same rationale as --animated-*
+       above: this must not drift if the semantic default token's wiring
+       changes). Channel-only OKLCH (not raw hex, unlike --animated-*) so
+       tailwind.config.ts can wrap it in oklch(var(--x) / <alpha-value>) —
+       the same pattern --divider uses — letting opacity-modified classes
+       (bg-button-default-gray/20 etc., used by hover states) actually work.
+       #52525B / #FFFFFF. */
+    --button-default-gray: 0.4419 0.0146 285.79;
+    --button-default-gray-foreground: 1 0 0;
+
+    /* Background/Foreground/Content layer tokens — reusable content1-4 (surface
+       depth steps) and foreground1-4 (matching text steps) from the Design
+       System doc's Background/Foreground/Content Layers table */
+    --content1: #FFFFFF;
+    --content2: #F4F4F5;
+    --content3: #E4E4E7;
+    --content4: #D4D4D8;
+    --foreground1: #18181B;
+    --foreground2: #27272A;
+    --foreground3: #3F3F46;
+    --foreground4: #52525B;
+
     /* @qpub/qui required tokens */
     --card: 1 0 0;
     --card-foreground: 0 0 0;
@@ -228,6 +252,21 @@
     --animated-primary-face-hover: #F5AE2C;
     --animated-secondary-face-hover: #B254DE;
     --animated-default-face-hover: #4C4C54;
+
+    /* Button/Chip default-gray — dark override. Channel-only OKLCH, see :root
+       comment above. #E4E4E7 / #18181B. */
+    --button-default-gray: 0.9197 0.004 286.32;
+    --button-default-gray-foreground: 0.2103 0.0059 285.82;
+
+    /* Background/Foreground/Content layer tokens — dark overrides */
+    --content1: #18181B;
+    --content2: #27272A;
+    --content3: #3F3F46;
+    --content4: #52525B;
+    --foreground1: #FAFAFA;
+    --foreground2: #F4F4F5;
+    --foreground3: #D4D4D8;
+    --foreground4: #A1A1AA;
 
     /* @qpub/qui required tokens (dark) */
     --card: 0 0 0;

@@ -16,10 +16,6 @@ import {
   Avatar,
   AvatarImage,
   AvatarFallback,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
   Select,
   SelectValue,
 } from "@qpub/qui";
@@ -31,6 +27,7 @@ import { Chip } from "@/components/ui/Chip";
 import { Input } from "@/components/ui/Input";
 import { OtpInput } from "@/components/ui/OtpInput";
 import { SelectTrigger, SelectContent, SelectItem } from "@/components/ui/Select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
 import { MoonLinearIcon, SunLinearIcon, SettingsLinearIcon } from "@/components/ui/icons";
 
 // Real control radius token (Yellow Hood Design System radius tokens, tailwind.config.ts).
@@ -151,43 +148,71 @@ const SEMANTIC_TOKENS = [
   { name: "Success", bg: "bg-success", text: "text-success-foreground", border: "border-success" },
   { name: "Warning", bg: "bg-warning", text: "text-warning-foreground", border: "border-warning" },
   { name: "Error (Danger)", bg: "bg-error", text: "text-error-foreground", border: "border-error" },
-  { name: "Default", bg: "bg-default", text: "text-foreground", border: "border-default-300 dark:border-default-400" },
+  { name: "Default", bg: "bg-default", text: "text-default-foreground", border: "border-default-300 dark:border-default-400" },
 ] as const;
 
 const SURFACE_TOKENS = [
   {
-    name: "bg-surface",
+    name: "background",
     className: "bg-background",
     description: "Primary layout background",
   },
   {
-    name: "bg-elevated",
-    className: "bg-default-50 dark:bg-default-900",
+    name: "content1",
+    className: "bg-content1",
     description: "Cards and raised containers",
   },
   {
-    name: "bg-subtle",
-    className: "bg-default-100 dark:bg-default-800",
+    name: "content2",
+    className: "bg-content2",
     description: "Nested groups and quiet emphasis",
+  },
+  {
+    name: "content3",
+    className: "bg-content3",
+    description: "Deeper nested layers",
+  },
+  {
+    name: "content4",
+    className: "bg-content4",
+    description: "Deepest nested / highest-contrast subtle surface",
   },
 ] as const;
 
+// foreground1-4 pair with content1-4 as the matching text-color step for each
+// surface depth, per the Design System doc's Content foreground levels table.
+const FOREGROUND_TOKENS = [
+  { name: "foreground1", className: "text-foreground1", description: "Primary text on content1" },
+  { name: "foreground2", className: "text-foreground2", description: "Secondary text on content2" },
+  { name: "foreground3", className: "text-foreground3", description: "Tertiary text on content3" },
+  { name: "foreground4", className: "text-foreground4", description: "Quaternary / muted text on content4" },
+] as const;
+
 const SPACING_SWATCHES = [
-  { token: "1", widthClass: "w-1" },
-  { token: "2", widthClass: "w-2" },
-  { token: "3", widthClass: "w-3" },
-  { token: "4", widthClass: "w-4" },
-  { token: "6", widthClass: "w-6" },
-  { token: "8", widthClass: "w-8" },
-  { token: "10", widthClass: "w-10" },
-  { token: "12", widthClass: "w-12" },
-  { token: "16", widthClass: "w-16" },
+  { token: "unit-xs", widthClass: "w-unit-xs" },
+  { token: "unit-sm", widthClass: "w-unit-sm" },
+  { token: "unit-md", widthClass: "w-unit-md" },
+  { token: "unit-lg", widthClass: "w-unit-lg" },
+  { token: "unit-xl", widthClass: "w-unit-xl" },
+  { token: "unit-2xl", widthClass: "w-unit-2xl" },
+  { token: "unit-3xl", widthClass: "w-unit-3xl" },
+  { token: "unit-4xl", widthClass: "w-unit-4xl" },
+  { token: "unit-5xl", widthClass: "w-unit-5xl" },
 ] as const;
 
 const RADIUS_SWATCHES = [
+  { name: "None", token: "rounded-none", className: "rounded-none" },
   { name: "Small", token: "rounded-small", className: "rounded-small" },
   { name: "Medium (Controls)", token: "rounded-medium", className: "rounded-medium", highlight: true },
   { name: "Large", token: "rounded-large", className: "rounded-large" },
+  { name: "Full", token: "rounded-full", className: "rounded-full" },
+] as const;
+
+// Yellow Hood Design System border-width tokens (tailwind.config.ts theme.extend.borderWidth).
+const BORDER_WIDTH_SWATCHES = [
+  { name: "Small", token: "border-small", className: "border-small", usage: "default input border, inactive OTP" },
+  { name: "Medium", token: "border-medium", className: "border-medium", usage: "—" },
+  { name: "Large", token: "border-large", className: "border-large", usage: "—" },
 ] as const;
 
 const BUTTON_VARIANTS = ["solid", "bordered", "flat", "ghost"] as const;
@@ -200,13 +225,13 @@ const ALERT_TOKENS = [
   { color: "info", name: "Info" },
 ] as const;
 
-// Pixel values are measured live from the rendered h-*/w-* classes below (32/40/56/64px),
+// Pixel values are measured live from the rendered h-*/w-* classes below (32/48/64/80px),
 // matching the Design System doc's Avatar sizing table.
 const AVATAR_SIZES = [
+  { size: "xl", px: 80, avatarClass: "h-20 w-20 rounded-large", textClass: "text-lg", initials: "FH" },
+  { size: "lg", px: 64, avatarClass: "h-16 w-16", textClass: "text-base", initials: "AN" },
+  { size: "md", px: 48, avatarClass: "h-12 w-12", textClass: "text-sm", initials: "KM" },
   { size: "sm", px: 32, avatarClass: "h-8 w-8", textClass: "text-xs", initials: "YH" },
-  { size: "md", px: 40, avatarClass: "h-10 w-10", textClass: "text-sm", initials: "KM" },
-  { size: "lg", px: 56, avatarClass: "h-14 w-14", textClass: "text-base", initials: "AN" },
-  { size: "xl", px: 64, avatarClass: "h-16 w-16", textClass: "text-lg", initials: "FH" },
 ] as const;
 
 type UsageGuidance = {
@@ -237,9 +262,8 @@ export default function DesignSystemPage() {
                 Yellow Hood Design System
               </h1>
               <p className="max-w-3xl text-lead font-light text-default-500">
-                Canonical reference for tokens, components, states, and usage patterns.
-                Every value and component on this page is imported live from tailwind.config.ts
-                and components/ui/ — nothing here is a hardcoded copy.
+                Canonical reference for tokens, components, states, and usage patterns — imported
+                live from tailwind.config.ts and components/ui/.
               </p>
             </div>
             <Button
@@ -258,9 +282,9 @@ export default function DesignSystemPage() {
           </div>
 
           <nav className="flex flex-wrap gap-3 text-xs md:text-sm">
-            <NavPill href="#typography">Typography</NavPill>
             <NavPill href="#colors">Colors</NavPill>
             <NavPill href="#spacing-radius">Spacing & Radius</NavPill>
+            <NavPill href="#typography">Typography</NavPill>
             <NavPill href="#buttons">Buttons</NavPill>
             <NavPill href="#inputs">Inputs</NavPill>
             <NavPill href="#badges-chips">Badges & Chips</NavPill>
@@ -274,6 +298,148 @@ export default function DesignSystemPage() {
             </p>
           )}
         </header>
+
+        <section id="colors" className="w-full max-w-5xl space-y-8">
+          <SectionHeader
+            title="Color System"
+            description="Color is token-first: numbered scales support design decisions, semantic tokens communicate intent, and surfaces establish depth."
+          />
+          <DocCard>
+            <div className="space-y-10">
+              <div className="space-y-6">
+                <SubgroupHeader
+                  title="Numbered scales"
+                  description="Read live from each color's real Tailwind utility class — always in sync with tailwind.config.ts."
+                />
+                <ColorScaleGrid title="Primary (Amber-Gold)" family="primary" swatches={PRIMARY_SWATCHES} />
+                <ColorScaleGrid title="Secondary (Purple)" family="secondary" swatches={SECONDARY_SWATCHES} />
+                <ColorScaleGrid title="Tertiary (Blue)" family="tertiary" swatches={TERTIARY_SWATCHES} />
+                <ColorScaleGrid title="Warning (Orange)" family="warning" swatches={WARNING_SWATCHES} />
+                <ColorScaleGrid title="Danger (Pink/Red)" family="danger" swatches={DANGER_SWATCHES} />
+                <ColorScaleGrid title="Success (Green)" family="success" swatches={SUCCESS_SWATCHES} />
+                <ColorScaleGrid title="Default (Neutral)" family="default" swatches={DEFAULT_SWATCHES} />
+                <p className="text-xs text-default-500">
+                  Only Default remains flat by design — Primary, Secondary, Tertiary, Warning,
+                  Danger, and Success are all theme-aware and switch with the toggle above.
+                </p>
+              </div>
+
+              <Separator className="bg-default-100" />
+
+              <div className="space-y-6">
+                <SubgroupHeader
+                  title="Semantic tokens"
+                  description="Theme-aware tokens driven by CSS variables in globals.css."
+                />
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {SEMANTIC_TOKENS.map((token) => (
+                    <SemanticTokenPreview key={token.name} token={token} />
+                  ))}
+                </div>
+              </div>
+
+              <Separator className="bg-default-100" />
+
+              <div className="space-y-6">
+                <SubgroupHeader
+                  title="Surface layers"
+                  description="Surface tokens communicate depth and grouping without heavy borders."
+                />
+                <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
+                  {SURFACE_TOKENS.map((surface) => (
+                    <SurfaceTokenPreview key={surface.name} surface={surface} />
+                  ))}
+                </div>
+              </div>
+
+              <Separator className="bg-default-100" />
+
+              <div className="space-y-6">
+                <SubgroupHeader
+                  title="Content foreground levels"
+                  description="foreground1-4 pair with content1-4 as the matching text-color step for each surface depth."
+                />
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  {FOREGROUND_TOKENS.map((token) => (
+                    <ForegroundTokenPreview key={token.name} token={token} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </DocCard>
+          <UsageBlock
+            guidance={{
+              use: "Use semantic tokens for message intent and surface tokens for container depth.",
+              avoid: "Choosing arbitrary palette shades directly in product UI.",
+              mistakes: "Using warning/error colors for decorative accents unrelated to state or feedback.",
+            }}
+          />
+        </section>
+
+        <section id="spacing-radius" className="w-full max-w-5xl space-y-8">
+          <SectionHeader
+            title="Spacing & Radius"
+            description="Layout rhythm is built on the app's 8pt spacing scale (tailwind.config.ts theme.spacing)."
+          />
+          <DocCard>
+            <div className="space-y-10">
+              <div className="space-y-6">
+                <SubgroupHeader
+                  title="Spacing tokens"
+                  description="Prefer `space-6` and `space-8` between major groups to keep hierarchy readable."
+                />
+                <div className="grid grid-cols-2 gap-4 text-xs sm:grid-cols-3">
+                  {SPACING_SWATCHES.map((item) => (
+                    <SpacingSwatch key={item.token} token={item.token} widthClass={item.widthClass} />
+                  ))}
+                </div>
+              </div>
+              <div className="grid gap-10 md:grid-cols-2">
+                <div className="space-y-6">
+                  <SubgroupHeader
+                    title="Radius tokens"
+                    description="`rounded-medium` (12px): Chip, Input, Select, Button sm. `rounded-large` (14px): AnimatedButton, Button md/lg, Card."
+                  />
+                  <div className="space-y-4 text-xs">
+                    {RADIUS_SWATCHES.map((item) => (
+                      <RadiusRow
+                        key={item.token}
+                        name={item.name}
+                        token={item.token}
+                        className={item.className}
+                        highlight={"highlight" in item ? item.highlight : false}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-6">
+                  <SubgroupHeader
+                    title="Border widths"
+                    description="`border-small` (1px): default input border, inactive OTP. `border-medium` (1.5px) and `border-large` (3px) are documented tokens with no current usage."
+                  />
+                  <div className="space-y-4 text-xs">
+                    {BORDER_WIDTH_SWATCHES.map((item) => (
+                      <BorderWidthRow
+                        key={item.token}
+                        name={item.name}
+                        token={item.token}
+                        className={item.className}
+                        usage={item.usage}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </DocCard>
+          <UsageBlock
+            guidance={{
+              use: "Apply 24/32px spacing between stacked groups and keep controls on shared radius tokens.",
+              avoid: "Mixing unrelated radius values within the same interaction cluster.",
+              mistakes: "Using borders to separate every block instead of spacing and subtle surfaces.",
+            }}
+          />
+        </section>
 
         <section id="typography" className="w-full max-w-5xl space-y-8">
           <SectionHeader
@@ -329,7 +495,7 @@ export default function DesignSystemPage() {
               <div className="space-y-6">
                 <SubgroupHeader
                   title="Text Button sizes"
-                  description="Not standalone headings — these tokens set the label text size/weight inside AnimatedButton and the qui Button primitive at each button size (see the Buttons section above for the live components)."
+                  description="Not standalone headings — these tokens set the label text size/weight inside AnimatedButton and the qui Button primitive at each button size (see the Buttons section below for the live components)."
                 />
                 <div className="space-y-8">
                   <TypographySample
@@ -361,64 +527,6 @@ export default function DesignSystemPage() {
                   />
                 </div>
               </div>
-
-              <Separator className="bg-default-100" />
-
-              <div className="space-y-6">
-                <SubgroupHeader
-                  title="Persian (FA) Type Scale"
-                  description="Parallel Persian scale, matched role-for-role to the English scale above. Every sample uses the font-fa utility (globals.css) — already pairing IRANSansXV with its documented 'dots' 8 variation setting — and dir=&quot;rtl&quot; on the title for correct right-to-left flow."
-                />
-                <div className="space-y-8">
-                  <TypographySample
-                    dir="rtl"
-                    label="H1 / Page title — 72px/72px, 800 extrabold"
-                    titleClass="font-fa text-[72px] leading-[72px] font-extrabold"
-                    titleText="خوش آمدید"
-                    description="Reserved for one primary title per page."
-                  />
-                  <Separator className="bg-default-100" />
-                  <TypographySample
-                    dir="rtl"
-                    label="H2 / Section title — 36px/40px, 700 bold"
-                    titleClass="font-fa text-[36px] leading-[40px] font-bold"
-                    titleText="معرفی بخش رنگ‌ها و تایپوگرافی"
-                    description="Use for major content groups and section starts."
-                  />
-                  <Separator className="bg-default-100" />
-                  <TypographySample
-                    dir="rtl"
-                    label="Subtitle / Secondary heading — 24px/32px, 600 demibold"
-                    titleClass="font-fa text-[24px] leading-[32px] font-semibold text-foreground"
-                    titleText="راهنمای استفاده از توکن‌ها"
-                    description="Pairs with H1/H2 as a secondary heading."
-                  />
-                  <Separator className="bg-default-100" />
-                  <TypographySample
-                    dir="rtl"
-                    label="Lead / Intro copy — 20px/28px, 300 light"
-                    titleClass="font-fa text-lead font-light text-default-500"
-                    titleText="متن مقدماتی به کاربران کمک می‌کند تا محتوا را سریع‌تر مرور کنند."
-                    description="Keep it short and avoid putting actions inside lead text. Reuses the corrected text-lead token above, now 20px/28px in both EN and FA."
-                  />
-                  <Separator className="bg-default-100" />
-                  <TypographySample
-                    dir="rtl"
-                    label="Body / Default copy — 16px/24px, 400 normal"
-                    titleClass="font-fa text-[16px] leading-[24px] font-normal text-foreground"
-                    titleText="این متن نمونه، دستورالعمل‌ها و جزئیات پشتیبان را نمایش می‌دهد."
-                    description="Prefer complete sentences with concise structure."
-                  />
-                  <Separator className="bg-default-100" />
-                  <TypographySample
-                    dir="rtl"
-                    label="Label / Forms and controls — 12px/16px, 700 bold"
-                    titleClass="font-fa text-[12px] leading-[16px] font-bold text-foreground"
-                    titleText="آدرس ایمیل"
-                    description="Keep labels specific and use sentence case."
-                  />
-                </div>
-              </div>
             </div>
           </DocCard>
           <UsageBlock
@@ -426,115 +534,6 @@ export default function DesignSystemPage() {
               use: "Apply this scale for page titles, section headers, descriptive copy, and field labels.",
               avoid: "Creating one-off text sizes for individual screens.",
               mistakes: "Using muted text for interactive labels or overusing heavy weights in dense layouts.",
-            }}
-          />
-        </section>
-
-        <section id="colors" className="w-full max-w-5xl space-y-8">
-          <SectionHeader
-            title="Color System"
-            description="Color is token-first: numbered scales support design decisions, semantic tokens communicate intent, and surfaces establish depth."
-          />
-          <DocCard>
-            <div className="space-y-10">
-              <div className="space-y-6">
-                <SubgroupHeader
-                  title="Numbered scales"
-                  description="Every swatch below reads its true rendered color live via getComputedStyle on the real Tailwind utility class — nothing here is a duplicated hex string, so it can't drift from tailwind.config.ts."
-                />
-                <ColorScaleGrid title="Primary (Amber-Gold)" family="primary" swatches={PRIMARY_SWATCHES} />
-                <ColorScaleGrid title="Secondary (Purple)" family="secondary" swatches={SECONDARY_SWATCHES} />
-                <ColorScaleGrid title="Tertiary (Blue)" family="tertiary" swatches={TERTIARY_SWATCHES} />
-                <ColorScaleGrid title="Warning (Orange)" family="warning" swatches={WARNING_SWATCHES} />
-                <ColorScaleGrid title="Danger (Pink/Red)" family="danger" swatches={DANGER_SWATCHES} />
-                <ColorScaleGrid title="Success (Green)" family="success" swatches={SUCCESS_SWATCHES} />
-                <ColorScaleGrid title="Default (Neutral)" family="default" swatches={DEFAULT_SWATCHES} />
-                <p className="text-xs text-default-500">
-                  Only Default remains flat by design — Primary, Secondary, Tertiary, Warning,
-                  Danger, and Success are all theme-aware and switch with the toggle above.
-                </p>
-              </div>
-
-              <Separator className="bg-default-100" />
-
-              <div className="space-y-6">
-                <SubgroupHeader
-                  title="Semantic tokens"
-                  description="Single-value tokens driven by CSS variables in globals.css. These are theme-aware — toggle light/dark above and watch them update live."
-                />
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {SEMANTIC_TOKENS.map((token) => (
-                    <SemanticTokenPreview key={token.name} token={token} />
-                  ))}
-                </div>
-              </div>
-
-              <Separator className="bg-default-100" />
-
-              <div className="space-y-6">
-                <SubgroupHeader
-                  title="Surface layers"
-                  description="Surface tokens communicate depth and grouping without heavy borders."
-                />
-                <div className="grid gap-6 md:grid-cols-3">
-                  {SURFACE_TOKENS.map((surface) => (
-                    <SurfaceTokenPreview key={surface.name} surface={surface} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </DocCard>
-          <UsageBlock
-            guidance={{
-              use: "Use semantic tokens for message intent and surface tokens for container depth.",
-              avoid: "Choosing arbitrary palette shades directly in product UI.",
-              mistakes: "Using warning/error colors for decorative accents unrelated to state or feedback.",
-            }}
-          />
-        </section>
-
-        <section id="spacing-radius" className="w-full max-w-5xl space-y-8">
-          <SectionHeader
-            title="Spacing & Radius"
-            description="Layout rhythm is built on the app's 8pt spacing scale (tailwind.config.ts theme.spacing). Every value below is measured live from a rendered element, not typed out by hand."
-          />
-          <DocCard>
-            <div className="grid gap-10 md:grid-cols-2">
-              <div className="space-y-6">
-                <SubgroupHeader
-                  title="Spacing tokens"
-                  description="Prefer `space-6` and `space-8` between major groups to keep hierarchy readable."
-                />
-                <div className="grid grid-cols-2 gap-4 text-xs sm:grid-cols-3">
-                  {SPACING_SWATCHES.map((item) => (
-                    <SpacingSwatch key={item.token} token={item.token} widthClass={item.widthClass} />
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-6">
-                <SubgroupHeader
-                  title="Radius tokens"
-                  description="Chip, Input, Select, and Button sm use `rounded-medium` (12px); AnimatedButton, Button md/lg, and Card use `rounded-large` (14px) — radius scales with a control's size/visual weight, not by component type alone."
-                />
-                <div className="space-y-4 text-xs">
-                  {RADIUS_SWATCHES.map((item) => (
-                    <RadiusRow
-                      key={item.token}
-                      name={item.name}
-                      token={item.token}
-                      className={item.className}
-                      highlight={"highlight" in item ? item.highlight : false}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </DocCard>
-          <UsageBlock
-            guidance={{
-              use: "Apply 24/32px spacing between stacked groups and keep controls on shared radius tokens.",
-              avoid: "Mixing unrelated radius values within the same interaction cluster.",
-              mistakes: "Using borders to separate every block instead of spacing and subtle surfaces.",
             }}
           />
         </section>
@@ -549,7 +548,7 @@ export default function DesignSystemPage() {
               <div className="space-y-6">
                 <SubgroupHeader
                   title="Animated Button (components/ui/AnimatedButton)"
-                  description="Hover, press, and Tab-focus the buttons below directly — these are the real interactive component, not a static mockup."
+                  description="Hover, press, and Tab-focus the buttons below to see their real interaction states."
                 />
                 <div className="space-y-8">
                   {(["primary", "secondary", "default"] as const).map((color) => (
@@ -565,26 +564,24 @@ export default function DesignSystemPage() {
                   ))}
                 </div>
                 <p className="text-xs text-default-500">
-                  Disabled and loading above use the component&apos;s real `isDisabled` / `isLoading`
-                  props. AnimatedButton defines a real press animation (translateY on pointer-down)
-                  plus a dedicated, subtle per-color hover shift on the face — hover the buttons above
-                  to see it.
+                  Disabled and loading use the `isDisabled` / `isLoading` props. Press triggers a
+                  translateY animation; hover applies a subtle per-color face shift.
                 </p>
                 <Separator className="bg-default-100" />
 
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="AnimatedButton only defines two sizes — lg for regular primary CTAs and xl for hero/single-focus CTAs (e.g. login, onboarding), usable on any device — role-based, not device-based. Shown here in primary color only, since size is independent of color."
+                    description="Two sizes, role-based not device-based. `xl` — the largest — is for a fixed, full-width bottom-of-page CTA or any standalone hero/single-focus action (e.g. login, onboarding). `lg` is for when the button is paired with another button or sits alongside other content (e.g. inside the Header or Footer)."
                   />
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2 text-center">
-                      <AnimatedButton color="primary" size="lg">Continue</AnimatedButton>
-                      <p className="text-[11px] text-default-500">lg — 48px (regular primary CTA)</p>
-                    </div>
-                    <div className="space-y-2 text-center">
                       <AnimatedButton color="primary" size="xl">Continue</AnimatedButton>
                       <p className="text-[11px] text-default-500">xl — 56px (hero / single-focus CTA)</p>
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <AnimatedButton color="primary" size="lg">Continue</AnimatedButton>
+                      <p className="text-[11px] text-default-500">lg — 48px (regular primary CTA)</p>
                     </div>
                   </div>
                 </div>
@@ -595,7 +592,7 @@ export default function DesignSystemPage() {
               <div className="space-y-6">
                 <SubgroupHeader
                   title="Button (@qpub/qui primitive)"
-                  description="Interact directly with the buttons below for real hover/focus states."
+                  description="Interact directly with the buttons below to see hover and focus states."
                 />
                 <div className="space-y-6">
                   {BUTTON_VARIANTS.map((variant) => (
@@ -603,11 +600,11 @@ export default function DesignSystemPage() {
                       <p className="text-xs font-semibold uppercase tracking-wide text-default-500">{variant}</p>
                       <div className="flex flex-wrap gap-4">
                         {BUTTON_COLORS.map((color) => (
-                          <Button key={color} variant={variant} color={color} size="md">
+                          <Button key={color} variant={variant} color={color} size="lg">
                             {color}
                           </Button>
                         ))}
-                        <Button variant={variant} color="primary" size="md" isDisabled>
+                        <Button variant={variant} color="primary" size="lg" isDisabled>
                           Disabled
                         </Button>
                       </div>
@@ -615,8 +612,7 @@ export default function DesignSystemPage() {
                   ))}
                 </div>
                 <p className="text-xs text-default-500">
-                  This component has no `isLoading` prop today, so no loading specimen is shown here —
-                  flagged rather than simulated.
+                  This component has no `isLoading` prop yet, so no loading specimen is shown.
                 </p>
 
                 <Separator className="bg-default-100" />
@@ -624,7 +620,7 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Icon-only"
-                    description="Solid variant, primary and default colors, sm/md/lg — no visible text label, icon only. Interact directly for real hover/focus; disabled uses the component's real `isDisabled` prop. Each button carries a real `aria-label` since there is no visible text for assistive tech to read."
+                    description="Solid variant, primary and default colors, sm/md/lg — icon only, no visible label. Each button includes an `aria-label` for assistive tech."
                   />
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     {(["primary", "default"] as const).map((color) => (
@@ -636,12 +632,12 @@ export default function DesignSystemPage() {
                               isIconOnly
                               variant="solid"
                               color={color}
-                              size="sm"
-                              aria-label={`${color} settings, small`}
+                              size="lg"
+                              aria-label={`${color} settings, large`}
                             >
-                              <SettingsLinearIcon size={16} />
+                              <SettingsLinearIcon size={20} />
                             </Button>
-                            <p className="text-[11px] text-default-500">sm</p>
+                            <p className="text-[11px] text-default-500">lg</p>
                           </div>
                           <div className="space-y-1 text-center">
                             <Button
@@ -660,12 +656,12 @@ export default function DesignSystemPage() {
                               isIconOnly
                               variant="solid"
                               color={color}
-                              size="lg"
-                              aria-label={`${color} settings, large`}
+                              size="sm"
+                              aria-label={`${color} settings, small`}
                             >
-                              <SettingsLinearIcon size={20} />
+                              <SettingsLinearIcon size={16} />
                             </Button>
-                            <p className="text-[11px] text-default-500">lg</p>
+                            <p className="text-[11px] text-default-500">sm</p>
                           </div>
                         </div>
                       </div>
@@ -684,20 +680,20 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Shown here for the solid variant, primary color only, since size is independent of variant/color."
+                    description="Shown here for the solid variant, primary color only, since size is independent of variant/color. `lg` is for standalone functional actions (e.g. Save, Confirm) — often paired with a Bordered default button beside it. `md` is for buttons inside boxes and popups/modals. `sm` is for buttons that sit close together or need to stay compact, e.g. a card's action row."
                   />
                   <div className="flex flex-wrap items-end gap-6 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2 text-center">
-                      <Button variant="solid" color="primary" size="sm">Continue</Button>
-                      <p className="text-[11px] text-default-500">sm — 28px</p>
+                      <Button variant="solid" color="primary" size="lg">Continue</Button>
+                      <p className="text-[11px] text-default-500">lg — 48px</p>
                     </div>
                     <div className="space-y-2 text-center">
                       <Button variant="solid" color="primary" size="md">Continue</Button>
                       <p className="text-[11px] text-default-500">md — 40px</p>
                     </div>
                     <div className="space-y-2 text-center">
-                      <Button variant="solid" color="primary" size="lg">Continue</Button>
-                      <p className="text-[11px] text-default-500">lg — 48px</p>
+                      <Button variant="solid" color="primary" size="sm">Continue</Button>
+                      <p className="text-[11px] text-default-500">sm — 28px</p>
                     </div>
                   </div>
                 </div>
@@ -723,22 +719,22 @@ export default function DesignSystemPage() {
               <div className="space-y-6">
                 <SubgroupHeader
                   title="Input (components/ui/Input)"
-                  description="Interact directly with the fields for real hover/focus; disabled and error/success below use the component's real props."
+                  description="Disabled and error/success states below use the component's real props."
                 />
                 <div className="grid gap-6 md:grid-cols-2">
-                  <Input label="Full name" placeholder="Enter your name" helperText="Use your legal first and last name." />
-                  <Input label="Email" color="success" placeholder="name@example.com" helperText="Email looks valid." />
+                  <Input label="Full name" placeholder="Enter your name" helperText="Use your legal first and last name." size="lg" />
+                  <Input label="Email" color="success" placeholder="name@example.com" helperText="Email looks valid." size="lg" />
                   <Input
                     label="Password"
                     type="password"
                     isInvalid
                     errorMessage="Password must be at least 8 characters."
+                    size="lg"
                   />
-                  <Input label="Role" placeholder="Owner" isDisabled helperText="Managed by organization policy." />
+                  <Input label="Role" placeholder="Owner" isDisabled helperText="Managed by organization policy." size="lg" />
                 </div>
                 <p className="text-xs text-default-500">
-                  This component has no `isLoading` prop today, so no loading specimen is shown here —
-                  flagged rather than simulated.
+                  This component has no `isLoading` prop yet, so no loading specimen is shown.
                 </p>
 
                 <Separator className="bg-default-100" />
@@ -746,16 +742,16 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Only two sizes are officially supported: the default (no `size` prop, what every existing usage in the app renders today) and `lg` — 56px, matched to AnimatedButton's `xl` height, since Input `lg` and AnimatedButton `xl` are the app's two large touch-target controls. @qpub/qui's native `sm` (28px) exists in the library but is not exposed here. Both sizes share the same `rounded-medium` (12px) radius — radius does not scale with size."
+                    description="Two sizes: `lg` (56px, matching AnimatedButton `xl`) is the primary choice — bigger and easier to read and fill, used first in Login, modals, and popups. The default (40px) size is used only when several inputs need to sit side by side to save space. Both use `rounded-medium` (12px) radius; native `sm` (28px) isn't exposed here."
                   />
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2">
-                      <Input label="Full name" placeholder="Enter your name" />
-                      <p className="text-[11px] text-default-500">default — 40px</p>
-                    </div>
-                    <div className="space-y-2">
                       <Input label="Full name" placeholder="Enter your name" size="lg" />
                       <p className="text-[11px] text-default-500">lg — 56px</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Input label="Full name" placeholder="Enter your name" />
+                      <p className="text-[11px] text-default-500">default — 40px</p>
                     </div>
                   </div>
                 </div>
@@ -765,8 +761,8 @@ export default function DesignSystemPage() {
 
               <div className="space-y-4">
                 <p className="text-xs font-semibold text-default-500">
-                  Textarea — no components/ui or @qpub/qui primitive exists yet; styled directly with
-                  real tokens on a native element.
+                  Textarea — no dedicated component yet; styled directly on a native element using
+                  the same tokens.
                 </p>
                 <div className="max-w-md space-y-4 rounded-xl bg-default-50 p-6 dark:bg-default-900">
                   <label htmlFor="ds-textarea" className="block text-xs font-label text-foreground">
@@ -786,25 +782,25 @@ export default function DesignSystemPage() {
               <div className="space-y-6">
                 <SubgroupHeader
                   title="Select (components/ui/Select)"
-                  description="Interact directly with the trigger for real hover/focus; click to open the option list and pick one to see the displayed value update live. The second example uses the component's real `isDisabled` prop."
+                  description="Click the trigger to open the option list and select a value. The second example is disabled."
                 />
                 <div className="grid gap-6 md:grid-cols-2">
                   <Select>
-                    <SelectTrigger className="w-full" aria-label="Role">
+                    <SelectTrigger size="lg" className="w-full" aria-label="Role">
                       <SelectValue placeholder="Select a role" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="editor">Editor</SelectItem>
-                      <SelectItem value="viewer">Viewer</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
+                    <SelectContent size="lg">
+                      <SelectItem size="lg" value="editor">Editor</SelectItem>
+                      <SelectItem size="lg" value="viewer">Viewer</SelectItem>
+                      <SelectItem size="lg" value="admin">Admin</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select isDisabled>
-                    <SelectTrigger className="w-full" aria-label="Role (disabled)">
+                    <SelectTrigger size="lg" className="w-full" aria-label="Role (disabled)">
                       <SelectValue placeholder="Disabled" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="editor">Editor</SelectItem>
+                    <SelectContent size="lg">
+                      <SelectItem size="lg" value="editor">Editor</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -814,20 +810,9 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Only two sizes are officially supported: the default (no `size` prop) and `lg` — 56px, matching Input's `lg` exactly. @qpub/qui's native `sm` (28px) exists in the library but is not exposed here. Both sizes share the same `rounded-medium` (12px) radius — qui's native `rounded-xs` is overridden here on the trigger, the dropdown, and its menu items, and radius does not scale with size. Open the `lg` dropdown below: its menu item also renders at the matching larger text size — qui doesn't sync this automatically, so components/ui/Select's SelectContent/SelectItem take an explicit `size` prop that must be passed alongside the trigger's."
+                    description="Two sizes: default (40px) and `lg` (56px), matching Input exactly. Both use `rounded-medium` (12px) radius. Pass `size` to the trigger, `SelectContent`, and `SelectItem` together to keep them in sync."
                   />
                   <div className="flex flex-wrap items-end gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
-                    <div className="w-56 space-y-2">
-                      <Select>
-                        <SelectTrigger className="w-full" aria-label="Role, default size">
-                          <SelectValue placeholder="Select a role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="editor">Editor</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-[11px] text-default-500">default — 40px</p>
-                    </div>
                     <div className="w-56 space-y-2">
                       <Select>
                         <SelectTrigger size="lg" className="w-full" aria-label="Role, large size">
@@ -839,6 +824,17 @@ export default function DesignSystemPage() {
                       </Select>
                       <p className="text-[11px] text-default-500">lg — 56px</p>
                     </div>
+                    <div className="w-56 space-y-2">
+                      <Select>
+                        <SelectTrigger className="w-full" aria-label="Role, default size">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="editor">Editor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-[11px] text-default-500">default — 40px</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -848,16 +844,14 @@ export default function DesignSystemPage() {
               <div id="otp-input" className="space-y-6">
                 <SubgroupHeader
                   title="OTP Input (components/ui/OtpInput)"
-                  description="Four independent single-character cells with auto-advance and backspace-to-previous behavior. Type digits below to see real behavior and the onComplete callback fire."
+                  description="Four independent cells with auto-advance and backspace-to-previous behavior. Type digits to trigger `onComplete`."
                 />
                 <div className="rounded-xl bg-default-50 p-6 dark:bg-default-900">
-                  <OtpInputDemo size="sm" />
+                  <OtpInputDemo size="lg" />
                 </div>
                 <p className="text-xs text-default-500">
-                  This component currently exposes no `disabled`, `error`, or `loading` props — only its
-                  default and native `focus:` state are shown above. This is a real gap in the component
-                  itself, not a limitation of this page; it is flagged for follow-up rather than added
-                  here, since extending OtpInput.tsx is out of scope for this task.
+                  This component has no `disabled`, `error`, or `loading` props yet — only default,
+                  hover, and focus states are shown.
                 </p>
 
                 <Separator className="bg-default-100" />
@@ -865,16 +859,16 @@ export default function DesignSystemPage() {
                 <div className="space-y-4">
                   <SubgroupHeader
                     title="Sizes"
-                    description="Cell heights are pinned to match components/ui/Input.tsx exactly — width is independent, just this component's own proportional cell width. `lg` — 48×56px per cell — is the default (no `size` prop), height-matched to Input's `lg` (56px). `sm` — 32×40px per cell — is a new opt-in size, height-matched to Input's default/md (40px)."
+                    description="Two sizes, height-matched to Input: `lg` (48×56px, default) and `sm` (40×40px, opt-in)."
                   />
                   <div className="flex flex-wrap items-start gap-8 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
                     <div className="space-y-2">
-                      <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">sm — 32×40px</p>
-                      <OtpInputDemo size="sm" />
-                    </div>
-                    <div className="space-y-2">
                       <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">lg — 48×56px (default)</p>
                       <OtpInputDemo size="lg" />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-default-500">sm — 40×40px</p>
+                      <OtpInputDemo size="sm" />
                     </div>
                   </div>
                 </div>
@@ -1029,7 +1023,7 @@ export default function DesignSystemPage() {
 
               <div className="grid gap-8 md:grid-cols-2">
                 <div className="space-y-6 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
-                  <p className="text-sm font-semibold text-foreground">Tabs (@qpub/qui)</p>
+                  <p className="text-sm font-semibold text-foreground">Tabs (components/ui/Tabs)</p>
                   <Tabs defaultValue="activity" color="primary">
                     <TabsList>
                       <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -1047,8 +1041,7 @@ export default function DesignSystemPage() {
                     </TabsContent>
                   </Tabs>
                   <p className="text-xs text-default-500">
-                    Click tabs directly to see real active/focus behavior; Billing is disabled via
-                    Radix&apos;s native `disabled` prop.
+                    Billing is disabled via the native `disabled` prop.
                   </p>
                 </div>
                 <ListRowsDemo />
@@ -1206,6 +1199,21 @@ function SurfaceTokenPreview({
   );
 }
 
+function ForegroundTokenPreview({
+  token,
+}: {
+  token: (typeof FOREGROUND_TOKENS)[number];
+}) {
+  return (
+    <div className="space-y-4 rounded-xl border border-default-200 dark:border-default-800 bg-background p-6">
+      <p className="text-sm font-semibold text-foreground">{token.name}</p>
+      <p className={`text-lg font-semibold ${token.className}`}>Aa Yellow Hood</p>
+      <p className="text-xs text-default-500">{token.description}</p>
+      <p className="text-xs font-mono text-default-500">{token.className}</p>
+    </div>
+  );
+}
+
 function SpacingSwatch({ token, widthClass }: { token: string; widthClass: string }) {
   const ref = React.useRef<HTMLDivElement | null>(null);
   const [px, setPx] = React.useState("—");
@@ -1246,6 +1254,34 @@ function RadiusRow({ name, token, className, highlight }: RadiusRowProps) {
       <div className="space-y-1 text-xs">
         <p className={highlight ? "font-semibold text-secondary" : "font-semibold text-foreground"}>{name}</p>
         <p className="font-mono text-default-500">{token} • {radius}</p>
+      </div>
+    </div>
+  );
+}
+
+type BorderWidthRowProps = {
+  name: string;
+  token: string;
+  className: string;
+  usage: string;
+};
+
+function BorderWidthRow({ name, token, className, usage }: BorderWidthRowProps) {
+  const ref = React.useRef<HTMLDivElement | null>(null);
+  const [borderWidth, setBorderWidth] = React.useState("—");
+
+  React.useEffect(() => {
+    if (!ref.current) return;
+    setBorderWidth(window.getComputedStyle(ref.current).borderWidth);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-4">
+      <div ref={ref} className={`h-10 w-20 border-solid border-default-400 dark:border-default-500 bg-default-100 dark:bg-default-800 ${className}`} />
+      <div className="space-y-1 text-xs">
+        <p className="font-semibold text-foreground">{name}</p>
+        <p className="font-mono text-default-500">{token} • {borderWidth}</p>
+        <p className="text-default-500">{usage}</p>
       </div>
     </div>
   );
@@ -1329,14 +1365,14 @@ function ListRowsDemo() {
   return (
     <div className="space-y-6 rounded-xl bg-default-50 p-6 dark:bg-default-900">
       <p className="text-sm font-semibold text-foreground">
-        List row — no components/ui or @qpub/qui primitive exists yet; styled directly with real tokens.
+        List row — no dedicated component yet; styled directly using the same tokens.
       </p>
       <div className="flex items-center justify-between rounded-xl border border-default-200 dark:border-default-800 bg-background px-4 py-3 transition hover:border-default-300 dark:hover:border-default-700 hover:bg-default-100 focus-within:ring-2 focus-within:ring-primary dark:hover:bg-default-800">
         <div className="flex items-center gap-3">
           <span className="h-8 w-8 rounded-lg bg-default-200 dark:bg-default-700" />
           <div className="space-y-1">
             <p className="text-sm font-semibold text-foreground">Row with icon and text</p>
-            <p className="text-xs text-default-500">Hover or focus this row to see its real state.</p>
+            <p className="text-xs text-default-500">Hover or focus to see its state.</p>
           </div>
         </div>
         <Button variant="ghost" color="default" size="sm">Action</Button>

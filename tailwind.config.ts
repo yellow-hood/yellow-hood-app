@@ -44,6 +44,25 @@ const config: Config = {
       96: "24rem",
     },
     extend: {
+      // Yellow Hood Design System named spacing scale — additive on top of the
+      // numeric 0–96 scale above (theme.spacing); string keys can't collide
+      // with those numeric keys, so nothing that already uses the numeric
+      // scale (p-4, gap-6, w-10, etc.) is affected.
+      spacing: {
+        "unit-xs": "0.5rem",
+        "unit-sm": "0.75rem",
+        "unit-md": "1rem",
+        "unit-lg": "1.375rem",
+        "unit-xl": "2.25rem",
+        "unit-2xl": "3rem",
+        "unit-3xl": "5rem",
+        "unit-4xl": "7.5rem",
+        "unit-5xl": "14rem",
+        "unit-6xl": "18rem",
+        "unit-7xl": "24rem",
+        "unit-8xl": "32rem",
+        "unit-9xl": "40rem",
+      },
       fontFamily: {
         nunito: ["var(--font-nunito)"],
         iranxv: ["var(--font-iranxv)"],
@@ -52,6 +71,10 @@ const config: Config = {
       fontSize: {
         lead: ["1.25rem", { lineHeight: "1.4" }],
         subtitle: ["1.5rem", { lineHeight: "2rem" }],
+      },
+      // Yellow Hood Design System typography "Label" role weight
+      fontWeight: {
+        label: "700",
       },
       // Yellow Hood Design System radius tokens
       borderRadius: {
@@ -172,6 +195,19 @@ const config: Config = {
         "animated-primary-face-hover": "var(--animated-primary-face-hover)",
         "animated-secondary-face-hover": "var(--animated-secondary-face-hover)",
         "animated-default-face-hover": "var(--animated-default-face-hover)",
+        // Button/Chip "default" color — theme-aware via CSS variables in globals.css, decoupled from the semantic default/default-foreground tokens.
+        // Wrapped in oklch(... / <alpha-value>), same pattern as divider below, so opacity-modified classes (bg-button-default-gray/20 etc., used by hover states) work.
+        "button-default-gray": "oklch(var(--button-default-gray) / <alpha-value>)",
+        "button-default-gray-foreground": "oklch(var(--button-default-gray-foreground) / <alpha-value>)",
+        // Background/Foreground/Content layer tokens — theme-aware via CSS variables in globals.css
+        content1: "var(--content1)",
+        content2: "var(--content2)",
+        content3: "var(--content3)",
+        content4: "var(--content4)",
+        foreground1: "var(--foreground1)",
+        foreground2: "var(--foreground2)",
+        foreground3: "var(--foreground3)",
+        foreground4: "var(--foreground4)",
       },
     },
   },
