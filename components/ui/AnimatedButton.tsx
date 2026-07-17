@@ -39,6 +39,17 @@ const faceHoverColor: Record<AnimatedButtonColor, string> = {
   default: "hover:bg-animated-default-face-hover",
 };
 
+// Design System doc's AnimatedButton color table: primary text is #18181B in
+// both themes (the flat default-900 numbered-scale step already resolves to
+// that exact value in both light and dark); secondary is #18181B in light,
+// #FFFFFF in dark (fixes the light-mode white-on-light-purple contrast bug);
+// default is unchanged/out of this task's scope.
+const textColor: Record<AnimatedButtonColor, string> = {
+  primary: "text-default-900",
+  secondary: "text-default-900 dark:text-white",
+  default: "text-foreground",
+};
+
 export function AnimatedButton({
   color = "primary",
   size = "lg",
@@ -89,10 +100,12 @@ export function AnimatedButton({
           // 8px strip visible at rest (lg: 48px container -> 40px face; xl: 56px
           // container -> 48px face). Pressing translates the face down by that
           // same 8px so it sits flush with the wall, per the two-layer press spec.
-          "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-large font-semibold",
-          size === "xl" ? "px-8 text-base" : "px-6 text-sm",
+          // Text Button LG (16px/500) at both lg and xl per the Design System doc.
+          // Horizontal padding is also 24px (px-6) at both sizes — xl and lg share
+          // the same value per the doc's Sizes table; height is untouched by this.
+          "relative z-10 flex h-[calc(100%-8px)] w-full items-center justify-center gap-2 rounded-large px-6 text-base font-medium",
           faceColor[color],
-          color === "default" && "text-foreground",
+          textColor[color],
 
           // Qui's Button overrides to cancel visual conflicts with the wall/press illusion
           faceHoverColor[color],

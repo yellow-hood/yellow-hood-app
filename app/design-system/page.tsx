@@ -16,10 +16,6 @@ import {
   Avatar,
   AvatarImage,
   AvatarFallback,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
   Select,
   SelectValue,
 } from "@qpub/qui";
@@ -31,6 +27,7 @@ import { Chip } from "@/components/ui/Chip";
 import { Input } from "@/components/ui/Input";
 import { OtpInput } from "@/components/ui/OtpInput";
 import { SelectTrigger, SelectContent, SelectItem } from "@/components/ui/Select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
 import { MoonLinearIcon, SunLinearIcon, SettingsLinearIcon } from "@/components/ui/icons";
 
 // Real control radius token (Yellow Hood Design System radius tokens, tailwind.config.ts).
@@ -162,24 +159,33 @@ const SURFACE_TOKENS = [
   },
   {
     name: "content1",
-    className: "bg-background dark:bg-default-900",
+    className: "bg-content1",
     description: "Cards and raised containers",
   },
   {
     name: "content2",
-    className: "bg-default-100 dark:bg-default-800",
+    className: "bg-content2",
     description: "Nested groups and quiet emphasis",
   },
   {
     name: "content3",
-    className: "bg-default-200 dark:bg-default-700",
+    className: "bg-content3",
     description: "Deeper nested layers",
   },
   {
     name: "content4",
-    className: "bg-default-300 dark:bg-default-600",
+    className: "bg-content4",
     description: "Deepest nested / highest-contrast subtle surface",
   },
+] as const;
+
+// foreground1-4 pair with content1-4 as the matching text-color step for each
+// surface depth, per the Design System doc's Content foreground levels table.
+const FOREGROUND_TOKENS = [
+  { name: "foreground1", className: "text-foreground1", description: "Primary text on content1" },
+  { name: "foreground2", className: "text-foreground2", description: "Secondary text on content2" },
+  { name: "foreground3", className: "text-foreground3", description: "Tertiary text on content3" },
+  { name: "foreground4", className: "text-foreground4", description: "Quaternary / muted text on content4" },
 ] as const;
 
 const SPACING_SWATCHES = [
@@ -342,6 +348,20 @@ export default function DesignSystemPage() {
                 <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
                   {SURFACE_TOKENS.map((surface) => (
                     <SurfaceTokenPreview key={surface.name} surface={surface} />
+                  ))}
+                </div>
+              </div>
+
+              <Separator className="bg-default-100" />
+
+              <div className="space-y-6">
+                <SubgroupHeader
+                  title="Content foreground levels"
+                  description="foreground1-4 pair with content1-4 as the matching text-color step for each surface depth."
+                />
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                  {FOREGROUND_TOKENS.map((token) => (
+                    <ForegroundTokenPreview key={token.name} token={token} />
                   ))}
                 </div>
               </div>
@@ -1003,7 +1023,7 @@ export default function DesignSystemPage() {
 
               <div className="grid gap-8 md:grid-cols-2">
                 <div className="space-y-6 rounded-xl border border-default-200 dark:border-default-800 bg-default-50 p-6 dark:bg-default-900">
-                  <p className="text-sm font-semibold text-foreground">Tabs (@qpub/qui)</p>
+                  <p className="text-sm font-semibold text-foreground">Tabs (components/ui/Tabs)</p>
                   <Tabs defaultValue="activity" color="primary">
                     <TabsList>
                       <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -1175,6 +1195,21 @@ function SurfaceTokenPreview({
       <div className={`h-24 rounded-lg border border-default-200 dark:border-default-700 ${surface.className}`} />
       <p className="text-xs text-default-500">{surface.description}</p>
       <p className="text-xs font-mono text-default-500">{surface.className}</p>
+    </div>
+  );
+}
+
+function ForegroundTokenPreview({
+  token,
+}: {
+  token: (typeof FOREGROUND_TOKENS)[number];
+}) {
+  return (
+    <div className="space-y-4 rounded-xl border border-default-200 dark:border-default-800 bg-background p-6">
+      <p className="text-sm font-semibold text-foreground">{token.name}</p>
+      <p className={`text-lg font-semibold ${token.className}`}>Aa Yellow Hood</p>
+      <p className="text-xs text-default-500">{token.description}</p>
+      <p className="text-xs font-mono text-default-500">{token.className}</p>
     </div>
   );
 }

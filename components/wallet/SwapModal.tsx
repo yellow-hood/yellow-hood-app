@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Spinner, Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@qpub/qui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@qpub/qui";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ArrowRightLeft } from "lucide-react";
@@ -81,14 +81,10 @@ export default function SwapModal({ isOpen, onClose, currentBalance }: SwapModal
           <Button
             color="primary"
             onClick={handleSwap}
-            disabled={isLoading}
+            isLoading={isLoading}
             className="font-semibold"
           >
-            {isLoading ? (
-              <span className="flex items-center gap-2"><Spinner size="sm" />Processing...</span>
-            ) : (
-              <span className="flex items-center gap-2"><ArrowRightLeft className="w-4 h-4" />Confirm Swap</span>
-            )}
+            <span className="flex items-center gap-2"><ArrowRightLeft className="w-4 h-4" />Confirm Swap</span>
           </Button>
         </DialogFooter>
       </DialogContent>

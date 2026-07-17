@@ -31,20 +31,20 @@ const colorMap = {
 // (Solid: bg-foreground text-background; Bordered: border-foreground text-foreground on qui's own
 // bg-background; Flat: bg-foreground/10 text-foreground — confirmed distinct from Button's Flat, which
 // uses bg-muted/20) — the page's primary text/background color, not a neutral gray. Same root cause as
-// Button (see components/ui/Button.tsx), same fixed Button-scoped gray pair as the fix: light #52525B /
-// dark #E4E4E7. "dot" isn't a real qui Badge variant — Chip renders it as a Flat badge (see badgeVariant
-// below) plus a separately-colored indicator dot, so it's covered by the Flat entry here for the pill
-// itself; the dot's own color is fixed separately in dotColorMap below.
+// Button (see components/ui/Button.tsx), same dedicated --button-default-gray(-foreground) CSS variables
+// (app/globals.css) used as the fix — the var itself flips per theme, so no dark: prefix is needed below.
+// "dot" isn't a real qui Badge variant — Chip renders it as a Flat badge (see badgeVariant below) plus a
+// separately-colored indicator dot, so it's covered by the Flat entry here for the pill itself; the dot's
+// own color is fixed separately in dotColorMap below.
 // Hover mechanism matches Badge's real per-color formula (verified against primary's compiled classes)
 // rather than a discrete fixed hover hex: Solid dims the background to 80% opacity; Bordered only
 // faintly tints the background (5%) with no text/border fade — Badge's real Bordered mechanism never
 // fades text/border on hover, confirmed different from Button's Bordered. Flat already matched Badge's
 // real mechanism (bg/15, no text fade) and is unchanged.
 const defaultColorOverride: Record<string, string> = {
-  solid: "bg-[#52525B] text-white hover:bg-[#52525B]/80 dark:bg-[#E4E4E7] dark:text-[#18181B] dark:hover:bg-[#E4E4E7]/80",
-  bordered:
-    "border-[#52525B] text-[#52525B] hover:bg-[#52525B]/5 dark:border-[#E4E4E7] dark:text-[#E4E4E7] dark:hover:bg-[#E4E4E7]/5",
-  flat: "bg-[#52525B]/10 text-[#52525B] hover:bg-[#52525B]/15 dark:bg-[#E4E4E7]/10 dark:text-[#E4E4E7] dark:hover:bg-[#E4E4E7]/15",
+  solid: "bg-button-default-gray text-button-default-gray-foreground hover:bg-button-default-gray/80",
+  bordered: "border-button-default-gray text-button-default-gray hover:bg-button-default-gray/5",
+  flat: "bg-button-default-gray/10 text-button-default-gray hover:bg-button-default-gray/15",
 };
 
 // Trial fix (Fix card "Ghost/Bordered Non-Default Text Contrast Too Low in
@@ -52,17 +52,21 @@ const defaultColorOverride: Record<string, string> = {
 // variant resolves non-default colors' rest-state border+text straight to
 // each color's semantic DEFAULT (qui's `border-{color} text-{color}`
 // compound class), which is low contrast against white in light mode. Same
-// fix, same step-700 hex values as Button.tsx's GHOST_BORDERED_CONTRAST_STEP_700
-// (never darker than 700, per a hard user constraint). The dark: pair
-// re-asserts qui's own theme-aware classes so dark mode (already fine) is
-// unaffected. Hover (`[a&]:hover:bg-{color}/5`) is untouched. Trial only —
-// do not mirror these values into the Notion doc yet.
+// fix, same step-700 values as Button.tsx's GHOST_NON_DEFAULT_OVERRIDE /
+// BORDERED_NON_DEFAULT_OVERRIDE (never darker than 700, per a hard user
+// constraint) — now referencing each color's existing step-700 numbered-scale
+// class instead of a duplicated hex literal. The pink/red family's numbered
+// scale is keyed "danger" (tailwind.config.ts), not "error" — qui's own
+// "error" preset key only has DEFAULT/foreground, no numbered steps
+// (confirmed against node_modules/@qpub/qui/dist/tailwind-preset.mjs). The
+// dark: pair re-asserts qui's own theme-aware classes so dark mode (already
+// fine) is unaffected. Hover (`[a&]:hover:bg-{color}/5`) is untouched.
 const nonDefaultContrastOverride: Record<string, string> = {
-  primary: "border-[#C97106] text-[#C97106] dark:border-primary dark:text-primary",
-  secondary: "border-[#A64DCC] text-[#A64DCC] dark:border-secondary dark:text-secondary",
-  warning: "border-[#CC5B29] text-[#CC5B29] dark:border-warning dark:text-warning",
-  success: "border-[#0E793C] text-[#0E793C] dark:border-success dark:text-success",
-  error: "border-[#920B3A] text-[#920B3A] dark:border-error dark:text-error",
+  primary: "border-primary-700 text-primary-700 dark:border-primary dark:text-primary",
+  secondary: "border-secondary-700 text-secondary-700 dark:border-secondary dark:text-secondary",
+  warning: "border-warning-700 text-warning-700 dark:border-warning dark:text-warning",
+  success: "border-success-700 text-success-700 dark:border-success dark:text-success",
+  error: "border-danger-700 text-danger-700 dark:border-error dark:text-error",
 };
 
 const dotColorMap: Record<string, string> = {
@@ -73,9 +77,9 @@ const dotColorMap: Record<string, string> = {
   error: "bg-error",
   // Not bound to --foreground/--background like the rest of this map's siblings' formulas — this was
   // always a static, theme-invariant numbered-scale gray (bg-default-400, #A1A1AA in both themes), so it
-  // never had the near-black/near-white bug. Updated to the same fixed pair as Solid/Bordered/Flat above
-  // purely for visual consistency across the default-color family.
-  default: "bg-[#52525B] dark:bg-[#E4E4E7]",
+  // never had the near-black/near-white bug. Updated to the same --button-default-gray token as
+  // Solid/Bordered/Flat above purely for visual consistency across the default-color family.
+  default: "bg-button-default-gray",
 };
 
 export function Chip({

@@ -73,7 +73,7 @@ export function OtpInput({ onComplete, className, size = "lg" }: OtpInputProps) 
           onChange={(e) => handleChange(i, e)}
           onKeyDown={(e) => handleKeyDown(i, e)}
           className={cn(
-            "rounded-medium border text-center text-xl font-semibold outline-none transition-colors shrink-0",
+            "rounded-medium border text-center text-base font-medium outline-none transition-colors shrink-0",
             CELL_SIZE_CLASS[size],
             "border-default-200 dark:border-default-700 bg-muted/5 text-foreground",
             "hover:border-default-400 dark:hover:border-default-500",

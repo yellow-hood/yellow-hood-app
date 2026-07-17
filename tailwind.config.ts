@@ -195,6 +195,19 @@ const config: Config = {
         "animated-primary-face-hover": "var(--animated-primary-face-hover)",
         "animated-secondary-face-hover": "var(--animated-secondary-face-hover)",
         "animated-default-face-hover": "var(--animated-default-face-hover)",
+        // Button/Chip "default" color — theme-aware via CSS variables in globals.css, decoupled from the semantic default/default-foreground tokens.
+        // Wrapped in oklch(... / <alpha-value>), same pattern as divider below, so opacity-modified classes (bg-button-default-gray/20 etc., used by hover states) work.
+        "button-default-gray": "oklch(var(--button-default-gray) / <alpha-value>)",
+        "button-default-gray-foreground": "oklch(var(--button-default-gray-foreground) / <alpha-value>)",
+        // Background/Foreground/Content layer tokens — theme-aware via CSS variables in globals.css
+        content1: "var(--content1)",
+        content2: "var(--content2)",
+        content3: "var(--content3)",
+        content4: "var(--content4)",
+        foreground1: "var(--foreground1)",
+        foreground2: "var(--foreground2)",
+        foreground3: "var(--foreground3)",
+        foreground4: "var(--foreground4)",
       },
     },
   },
