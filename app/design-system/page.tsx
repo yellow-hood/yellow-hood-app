@@ -268,7 +268,8 @@ export default function DesignSystemPage() {
             </div>
             <Button
               isIconOnly
-              variant="light"
+              variant="flat"
+              color="default"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               aria-label="Toggle light/dark mode for this page"
               className="shrink-0"
