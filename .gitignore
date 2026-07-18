@@ -40,3 +40,6 @@ next-env.d.ts
 
 # ai tools
 .claude/
+
+*storybook.log
+storybook-static
