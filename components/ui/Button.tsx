@@ -97,15 +97,29 @@ export function Button({
           // Hover mechanism matches qui's real per-color formula (verified against primary's compiled
           // classes in the @qpub/qui bundle) rather than a discrete fixed hover hex: Solid dims the
           // background to 80% opacity; Bordered only faintly tints the background (5%) and fades
-          // text/border to 80%; Flat bumps the background tint to 15% and fades text to 80% (matching
-          // every other color's real Flat strength, not Default's own original 10%/muted-based value).
+          // text/border to 80%. Flat's own hover behavior is documented at its own key below (Light
+          // Spec "Flat Button — Fix Hover Text Color & Rest-State Light-Mode Text" changed it from
+          // qui's original fade-based mechanic to a pinned-text/deepened-background one).
           solid: "bg-button-default-gray text-button-default-gray-foreground hover:bg-button-default-gray/80",
           // DS-9: brought in line with the other five colors' Bordered hover
           // (DS-5/DS-8) — border/text stay unfaded on hover (same as rest),
           // background tint bumped from /5 to /20, both themes.
           bordered:
             "border-button-default-gray text-button-default-gray hover:bg-button-default-gray/20 hover:text-button-default-gray hover:border-button-default-gray",
-          flat: "bg-button-default-gray/20 text-button-default-gray hover:bg-button-default-gray/15 hover:text-button-default-gray/80",
+          // Light Spec "Flat Button — Fix Hover Text Color & Rest-State
+          // Light-Mode Text": hover no longer fades text (stays pinned to
+          // rest, matching FLAT_NON_DEFAULT_OVERRIDE below) and the
+          // background tint deepens on hover (/20 rest -> /30) instead of
+          // lightening (was /15 — backwards). The explicit hover:text-button-
+          // default-gray (no opacity) is required, not just the removal of
+          // our old /80 class: qui's own compiled flat+default compound
+          // variant carries its own native hover:text-foreground/80 (a
+          // different color token than ours, so tailwind-merge won't dedupe
+          // it) which otherwise wins on hover and fades text toward
+          // --foreground instead of staying pinned — same reason
+          // bordered/ghost above carry an explicit unfaded hover:text-
+          // button-default-gray of their own.
+          flat: "bg-button-default-gray/20 text-button-default-gray hover:bg-button-default-gray/30 hover:text-button-default-gray",
           ghost:
             "border-transparent text-button-default-gray hover:bg-button-default-gray/20 hover:text-button-default-gray",
         } as Record<string, string>)[effectiveVariant]
@@ -177,12 +191,42 @@ export function Button({
     success: "border-success-700 text-success-700 hover:bg-success/20 hover:border-success-700 hover:text-success-700 dark:border-success dark:text-success",
     error: "border-danger-700 text-danger-700 hover:bg-error/20 hover:border-danger-700 hover:text-danger-700 dark:border-error dark:text-error",
   };
+  // Flat (Light Spec "Flat Button — Fix Hover Text Color & Rest-State
+  // Light-Mode Text"): qui's native flat preset for non-default colors
+  // resolves rest text straight to each color's semantic DEFAULT
+  // (bg-{color}/20 text-{color} hover:bg-{color}/15 hover:text-{color}/80),
+  // same brighter/lighter-than-Ghost tone problem Ghost/Bordered already had.
+  // Pin rest-state text (light mode) to the same step-700 hex Ghost uses,
+  // dark mode stays on the plain semantic token via the same unconditioned
+  // dark:text-{color} cascade-order trick documented above. Hover text is
+  // pinned identical to rest (explicit hover:text-{color}-700 defeats qui's
+  // native hover:text-{color}/80 fade; dark mode hover relies on the same
+  // accidental-but-relied-upon dark: rest-state win over a same-specificity
+  // hover: rule). Only the hover background direction changes: bumped from
+  // qui's native /15 (lighter than rest's /20 — backwards) up to /30
+  // (deeper than rest, per spec). Rest-state background tint is left
+  // untouched (still qui's native bg-{color}/20). error keeps the same
+  // danger/error key split the other two overrides use.
+  const FLAT_NON_DEFAULT_OVERRIDE: Record<string, string> = {
+    primary:
+      "text-primary-700 hover:bg-primary/30 hover:text-primary-700 dark:text-primary",
+    secondary:
+      "text-secondary-700 hover:bg-secondary/30 hover:text-secondary-700 dark:text-secondary",
+    warning:
+      "text-warning-700 hover:bg-warning/30 hover:text-warning-700 dark:text-warning",
+    success:
+      "text-success-700 hover:bg-success/30 hover:text-success-700 dark:text-success",
+    error:
+      "text-danger-700 hover:bg-error/30 hover:text-danger-700 dark:text-error",
+  };
   const nonDefaultContrastOverride =
     effectiveVariant === "ghost"
       ? GHOST_NON_DEFAULT_OVERRIDE[effectiveColor]
       : effectiveVariant === "bordered"
         ? BORDERED_NON_DEFAULT_OVERRIDE[effectiveColor]
-        : undefined;
+        : effectiveVariant === "flat"
+          ? FLAT_NON_DEFAULT_OVERRIDE[effectiveColor]
+          : undefined;
 
   return (
     <QuiButton
