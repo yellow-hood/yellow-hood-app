@@ -86,8 +86,9 @@ export function Button({
   // real formula shape. The variable itself flips per theme, so no dark: prefix is needed anywhere below.
   // Bordered's hover shifts border/text to the hover value rather than filling the background, since a
   // solid fill this close in tone to the text color would wreck contrast. Flat keeps its original
-  // opacity-based hover mechanic (only Solid/Bordered/Ghost have a dedicated fixed hover value from the
-  // Fix card). Ghost's hover-fill text companion follows Solid's white/#18181B pairing (also token-backed).
+  // opacity-based hover mechanic (only Solid/Bordered have a dedicated fixed hover value from the Fix
+  // card). DS-10: Ghost now matches Bordered's own hover tint mechanic instead of filling solid — see
+  // GHOST_NON_DEFAULT_OVERRIDE below for the non-default-color version of the same change.
   const effectiveVariant = variant ?? "solid";
   const effectiveColor = color ?? "default";
   const defaultColorOverride =
@@ -106,7 +107,7 @@ export function Button({
             "border-button-default-gray text-button-default-gray hover:bg-button-default-gray/20 hover:text-button-default-gray hover:border-button-default-gray",
           flat: "bg-button-default-gray/20 text-button-default-gray hover:bg-button-default-gray/15 hover:text-button-default-gray/80",
           ghost:
-            "border-button-default-gray text-button-default-gray hover:bg-button-default-gray hover:text-button-default-gray-foreground",
+            "border-transparent text-button-default-gray hover:bg-button-default-gray/20 hover:text-button-default-gray",
         } as Record<string, string>)[effectiveVariant]
       : undefined;
 
@@ -125,46 +126,36 @@ export function Button({
   // `hover:text-{color}/80` or `hover:text-{color}-foreground` (one class +
   // one pseudo-class each), so with no explicit `dark:hover:` tie-breaker the
   // dark: rest-state re-assertion was ALSO winning on hover — Bordered's
-  // dark-mode hover accidentally stopped fading (harmless), but Ghost's
-  // dark-mode hover text collapsed onto the same color as its own fill
-  // (invisible). Every variant below now carries an explicit `dark:hover:`
-  // rule so dark mode's hover is spelled out rather than left to a
-  // specificity coincidence.
+  // dark-mode hover accidentally stopped fading (harmless), but Ghost's old
+  // hover-fill text (pre-DS-10) collapsed onto the same color as its own fill
+  // (invisible) without an explicit `dark:hover:` rule. DS-10 changed Ghost's
+  // hover to a tint (see below) that relies on the SAME accidental-win
+  // behavior Bordered already leans on, so neither variant carries a
+  // `dark:hover:` rule below anymore.
+  // Ghost (DS-10, Light Spec "Ghost Button — Remove Stroke, Switch Hover to
+  // Tint-Only"): stroke retired entirely — border-transparent covers rest AND
+  // hover (qui's ghost preset never emits a hover:border-* class for any
+  // color, so nothing competes with this single unconditioned override).
+  // Rest-state text keeps the same step-700/dark:{color} values the border
+  // used to carry. Hover now reuses Bordered's own bg-{color}/20 tint plus an
+  // explicit hover:text-{color}-700 restatement (unconditioned by dark:) to
+  // defeat qui's native hover:text-{color}-foreground — mirroring
+  // BORDERED_NON_DEFAULT_OVERRIDE's already-shipped pattern below, where
+  // dark:text-{color} (rest) already reliably wins the same cascade tie
+  // against a plain hover: rule, so no extra dark:hover: override is needed.
+  // error keeps the same danger/error key split BORDERED_NON_DEFAULT_OVERRIDE
+  // has: text tracks the "danger" numbered scale, hover bg tracks "error".
   const GHOST_NON_DEFAULT_OVERRIDE: Record<string, string> = {
-    // Ghost hover (DS-7, supersedes DS-6's step-700 fill): user reviewed DS-6's
-    // step-700 hover fill running and found it too dark/muted — hover should
-    // look exactly like the Solid variant instead. bg-{color}/border-{color}/
-    // text-{color}-foreground are the exact classes Solid itself uses, and are
-    // already theme-aware via their own CSS vars, so hover reads identically
-    // to Solid in both themes with no fixed hex needed here. text-{color}
-    // -foreground (not a hardcoded pairing) is deliberate: --warning-foreground
-    // and --success-foreground flip between light (white) and dark (#18181B)
-    // per app/globals.css and the Notion doc's own Foreground columns, so
-    // reusing the semantic token is what keeps hover pixel-identical to Solid
-    // in both themes — a fixed mapping would only match dark mode.
-    // dark:hover:* re-asserts the same values explicitly: dark:text-{color}
-    // (kept below for the REST state) shares CSS specificity with a plain
-    // hover:text-{color}-foreground, so without an explicit dark:hover: rule
-    // the rest-state rule can silently win on hover in dark mode (this is
-    // exactly what made DS-6's hover text briefly go invisible in dark mode).
-    // DS-9: rest-state border/text now references each color's existing
-    // step-700 numbered-scale class (primary-700 etc.) instead of a duplicated
-    // hex literal — same value, token-backed. The pink/red family's numbered
-    // scale is keyed "danger" (tailwind.config.ts), not "error" — qui's own
-    // "error" preset key only has DEFAULT/foreground, no numbered steps
-    // (confirmed against node_modules/@qpub/qui/dist/tailwind-preset.mjs) —
-    // so error's rest-state uses danger-700 while its hover/dark: classes
-    // correctly keep using the semantic "error" token.
     primary:
-      "border-primary-700 text-primary-700 hover:bg-primary hover:border-primary hover:text-primary-foreground dark:border-primary dark:text-primary dark:hover:bg-primary dark:hover:border-primary dark:hover:text-primary-foreground",
+      "border-transparent text-primary-700 hover:bg-primary/20 hover:text-primary-700 dark:text-primary",
     secondary:
-      "border-secondary-700 text-secondary-700 hover:bg-secondary hover:border-secondary hover:text-secondary-foreground dark:border-secondary dark:text-secondary dark:hover:bg-secondary dark:hover:border-secondary dark:hover:text-secondary-foreground",
+      "border-transparent text-secondary-700 hover:bg-secondary/20 hover:text-secondary-700 dark:text-secondary",
     warning:
-      "border-warning-700 text-warning-700 hover:bg-warning hover:border-warning hover:text-warning-foreground dark:border-warning dark:text-warning dark:hover:bg-warning dark:hover:border-warning dark:hover:text-warning-foreground",
+      "border-transparent text-warning-700 hover:bg-warning/20 hover:text-warning-700 dark:text-warning",
     success:
-      "border-success-700 text-success-700 hover:bg-success hover:border-success hover:text-success-foreground dark:border-success dark:text-success dark:hover:bg-success dark:hover:border-success dark:hover:text-success-foreground",
+      "border-transparent text-success-700 hover:bg-success/20 hover:text-success-700 dark:text-success",
     error:
-      "border-danger-700 text-danger-700 hover:bg-error hover:border-error hover:text-error-foreground dark:border-error dark:text-error dark:hover:bg-error dark:hover:border-error dark:hover:text-error-foreground",
+      "border-transparent text-danger-700 hover:bg-error/20 hover:text-danger-700 dark:text-error",
   };
   // Bordered: qui's native hover faded border+text to /80 of the ORIGINAL
   // semantic DEFAULT (not step-700), undoing the readability fix on hover.
