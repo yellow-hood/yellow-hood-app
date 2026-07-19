@@ -75,7 +75,7 @@ export default function SwapModal({ isOpen, onClose, currentBalance }: SwapModal
         </div>
 
         <DialogFooter>
-          <Button variant="light" onClick={handleClose}>
+          <Button variant="flat" color="default" onClick={handleClose}>
             Cancel
           </Button>
           <Button

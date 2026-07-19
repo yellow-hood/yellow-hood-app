@@ -60,7 +60,8 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Button
             isIconOnly
-            variant="light"
+            variant="flat"
+            color="default"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label="Toggle theme"
           >

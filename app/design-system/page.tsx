@@ -265,10 +265,19 @@ export default function DesignSystemPage() {
                 Canonical reference for tokens, components, states, and usage patterns — imported
                 live from tailwind.config.ts and components/ui/.
               </p>
+              <p className="max-w-3xl text-sm text-default-500">
+                For live component QA — Controls, Actions, All-Variants Matrix stories — run{" "}
+                <code className="rounded-medium bg-default-100 px-1.5 py-0.5 dark:bg-default-800">
+                  npm run storybook
+                </code>{" "}
+                instead of eyeballing this page. This page stays the canonical token/spec
+                reference; Storybook is the tool for checking a component against it.
+              </p>
             </div>
             <Button
               isIconOnly
-              variant="light"
+              variant="flat"
+              color="default"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               aria-label="Toggle light/dark mode for this page"
               className="shrink-0"
