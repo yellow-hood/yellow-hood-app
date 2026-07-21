@@ -1,7 +1,7 @@
 ---
 title: Yellow Hood — Design System
 source_url: https://www.notion.so/steering-agency/Design-System-3783cf957a68804f8561f85c2dc45f09
-last_synced: 2026-07-18
+last_synced: 2026-07-19
 canonical_source: "This file is a generated mirror. The Notion page at source_url is the single source of truth. Never hand-edit this file — regenerate it from Notion instead."
 ---
 
@@ -507,7 +507,7 @@ Only the default (40px) is currently used in real production call sites (setting
 
 ### Tabs
 
-Tabs uses `@qpub/qui`'s `Tabs`/`TabsList`/`TabsTrigger`/`TabsContent` directly (imported in `app/design-system/page.tsx`) — there is no `components/ui/Tabs.tsx` app-level wrapper, since Tabs has no real production usage anywhere in the app yet. The spec below documents how Tabs matches Yellow Hood's color system, ready for whenever a wrapper is needed — it is not yet a confirmed bug/gap in production code, only in this reference page.
+Tabs uses `@qpub/qui`'s `Tabs`/`TabsList`/`TabsTrigger`/`TabsContent` directly (imported in `app/design-system/page.tsx`) — there is no `components/ui/Tabs.tsx` app-level wrapper, since Tabs has no real production usage anywhere in the app yet. The spec below documents how Tabs matches Yellow Hood's color system, ready for whenever a wrapper is needed.
 
 Rendered as a pill/segmented control — rounded-full track, active trigger is a solid rounded-full pill filled with the primary color, inactive triggers sit directly on the track with no background.
 
@@ -610,7 +610,7 @@ Only `variant="bordered"` is used. Never use `variant="flat"` or `variant="under
 
 Each input has:
 
-- A **label**, rendered as a static element above the input box — not floating or animated. (An earlier draft of this doc described a HeroUI-style floating/shrinking label; that behavior does not apply to the current `@qpub/qui`-based Input and has been removed from the spec.)
+- A **label**, rendered as a static element above the input box — not floating or animated.
 - A **content** area (the typed value)
 - A **border** that changes color by state
 - Optional **startContent** / **endContent** slots (20×20px icons)
